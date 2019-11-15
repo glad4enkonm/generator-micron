@@ -1,0 +1,22 @@
+{
+  "name": "generator-micron",
+  "version": "1.0.0",
+  "description": "A yeoman generator to create .net core microservices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glad4enkonm/generator-micron.git"
+  },
+  "author": "Nikolai Gladchenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/glad4enkonm/generator-micron/issues"
+  },
+  "homepage": "https://github.com/glad4enkonm/generator-micron#readme",
+  "dependencies": {
+    "yeoman-generator": "^4.2.0"
+  }
+}
