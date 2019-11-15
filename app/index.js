@@ -25,6 +25,10 @@ function create_solution_and_projects(answers) {
   dotnet.add_package_to_project("Microsoft.Extensions.Configuration", "Core", "2.2.0");
 }
 
+function copy_db_files(that) {
+  that.copy("Database/_Program.cs", "Database/Program.cs")
+}
+
 module.exports = class extends Generator {
     async prompting() {
       this.log(yosay('Welcome to the Yeoman ' + chalk.green('micron') + ' (' + pkg.version + ')' + ' generator!'));
@@ -40,5 +44,6 @@ module.exports = class extends Generator {
 
     writing() {
       create_solution_and_projects(this.answers);
+      copy_db_files(this);
     }
 }
