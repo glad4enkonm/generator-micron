@@ -5,6 +5,9 @@ const chalk = require('chalk');
 const pkg = require('../package.json');
 const dotnet = require('./dotnet');
 
+const pascal_case = string => _.upperFirst(_.camelCase(string));
+const map_to_local = string => string;
+
 function create_solution_and_projects(answers) {
   /* */
   dotnet.new_solution(answers.name);
@@ -25,8 +28,31 @@ function create_solution_and_projects(answers) {
   dotnet.add_package_to_project("Microsoft.Extensions.Configuration", "Core", "2.2.0");
 }
 
-function copy_db_files(that) {
-  that.copy("Database/_Program.cs", "Database/Program.cs")
+function prepare_sql_data(data){
+  const clone_data = _.cloneDeep(data);
+  clone_data.messageList = clone_data.messageList
+    .map(msg => {
+      msg.name = pascal_case(msg.name);
+      msg.propList
+        .map(prop => {
+          prop.name = pascal_case(prop.name);
+          return prop;
+        });
+      return msg;
+    });
+  return clone_data;
+}
+
+function copy_db_files(that) {  
+  that.fs.copyTpl(that.templatePath("Database/_Program.cs"), that.destinationPath("Database/Program.cs"));
+  that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Database/Database.runtimeconfig.json"));
+  const data_to_render = prepare_sql_data(that.config.get("proto"));
+  that.log(data_to_render);
+  that.fs.copyTpl(
+    that.templatePath("Database/ScriptInit0001.sql"), 
+    that.destinationPath("Database/Scripts/ScriptInit0001.sql"),
+    data_to_render
+  );
 }
 
 module.exports = class extends Generator {

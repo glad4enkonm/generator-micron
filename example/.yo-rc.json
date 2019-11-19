@@ -1,0 +1,28 @@
+{
+  "generator-micron": {
+    "proto": {
+      "package": "project",
+      "csharpNamespace": "Broadcast.User",
+      "serviceList": [
+        { "name": "ProjectCRUD", "request": "ProjectRequest", "response": "ProjectResponse"},
+        { "name": "ComponentCRUD", "request": "ComponentRequest", "response": "ComponentResponse"},
+        { "name": "ConfigurationCRUD", "request": "ConfigurationRequest", "response": "ConfigurationResponse"}
+      ],
+      "messageList" : [
+        {
+          "name": "Project",
+          "propList": [
+            {"name":"project id", "type":   "int32",  "number":   1},
+            {"name":"name",       "type":   "string", "number":   2},
+            {"name":"tag",        "type":   "string", "number":   3},
+            {"name":"created by", "type":   "string", "number":   4},
+            {"name":"group",      "type":   "string", "number":   5},
+            {"name":"description","type":   "string", "number":   6},
+            {"name":"path",       "type":   "string", "number":   7},
+            {"name":"owner",      "type":   "string", "number":   8}
+          ]
+        } 
+      ]
+    }
+  }
+}
