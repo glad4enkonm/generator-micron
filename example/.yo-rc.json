@@ -10,16 +10,16 @@
       ],
       "messageList" : [
         {
-          "name": "Project",
+          "name": "project",
           "propList": [
             {"name":"project id", "type":   "int32",  "number":   1},
-            {"name":"name",       "type":   "string", "number":   2},
+            {"name":"name",       "type":   "string", "number":   2,    "notNull": true},
             {"name":"tag",        "type":   "string", "number":   3},
-            {"name":"created by", "type":   "string", "number":   4},
+            {"name":"created by", "type":   "string", "number":   4,    "notNull": true},
             {"name":"group",      "type":   "string", "number":   5},
             {"name":"description","type":   "string", "number":   6},
-            {"name":"path",       "type":   "string", "number":   7},
-            {"name":"owner",      "type":   "string", "number":   8}
+            {"name":"path",       "type":   "string", "number":   7,    "notNull": true},
+            {"name":"owner",      "type":   "string", "number":   8,    "notNull": true}
           ]
         } 
       ]
