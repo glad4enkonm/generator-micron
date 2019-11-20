@@ -12,14 +12,25 @@
         {
           "name": "project",
           "propList": [
-            {"name":"project id", "type":   "int32",  "number":   1},
-            {"name":"name",       "type":   "string", "number":   2,    "notNull": true},
-            {"name":"tag",        "type":   "string", "number":   3},
-            {"name":"created by", "type":   "string", "number":   4,    "notNull": true},
-            {"name":"group",      "type":   "string", "number":   5},
-            {"name":"description","type":   "string", "number":   6},
-            {"name":"path",       "type":   "string", "number":   7,    "notNull": true},
-            {"name":"owner",      "type":   "string", "number":   8,    "notNull": true}
+            {"name":"project id", "type":     "int32"},
+            {"name":"name",       "type":    "string",    "notNull": true,    "unique": true },
+            {"name":"tag",        "type":    "string"},
+            {"name":"created by", "type":    "string",    "notNull": true },
+            {"name":"group",      "type":    "string"},
+            {"name":"description","type":    "string"},
+            {"name":"path",       "type":    "string",    "notNull": true,    "unique": true },
+            {"name":"owner",      "type":    "string",    "notNull": true }
+          ],
+          "relationList": ["configuration"]
+        },
+        {
+          "name": "component",
+          "propList": [
+            {"name":"component id",     "type":    "int32"},
+            {"name":"name",             "type":   "string",     "notNull": true },
+            {"name":"tag",              "type":   "string"},
+            {"name":"description",      "type":   "string"},
+            {"name":"path",             "type":   "string",     "notNull": true,    "unique": true }
           ]
         } 
       ]
