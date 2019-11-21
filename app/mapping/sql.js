@@ -1,8 +1,9 @@
 const _ = require('lodash');
 
 const mapping = {
-    "string"    :       "[varchar](max)",
-    "int32"     :       "[int]", 
+    "string"        :       "[varchar](max)",
+    "int32"         :       "[int]",
+    "string unique" :       "[varchar](450)" // https://stackoverflow.com/questions/2863993
 }
 
 const pascal_case = string => _.upperFirst(_.camelCase(string));
@@ -28,6 +29,10 @@ function addRelationList(existing) {
 
 function processProperty(prop, structureName) {
   prop.name = pascal_case(prop.name);
+  
+  if (prop.type == "string" && prop.hasOwnProperty("unique"))
+    prop.type = "string unique";
+  
   prop.type = mapType(prop.type);
 
   const isIdProp = prop.name == `${structureName}Id`;

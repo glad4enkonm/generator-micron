@@ -24,6 +24,18 @@
           "relationList": ["configuration"]
         },
         {
+          "name": "configuration",
+          "propList": [
+            {"name":"configuration id",     "type":    "int32"},
+            {"name":"name",                 "type":   "string",     "notNull": true },
+            {"name":"tag",                  "type":   "string"},
+            {"name":"description",          "type":   "string"},
+            {"name":"owner",                "type":   "string",     "notNull": true },
+            {"name":"path",                 "type":   "string",     "notNull": true,    "unique": true }
+          ],
+          "relationList": ["component"]
+        },
+        {
           "name": "component",
           "propList": [
             {"name":"component id",     "type":    "int32"},
