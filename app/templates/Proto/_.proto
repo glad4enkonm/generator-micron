@@ -1,0 +1,77 @@
+syntax = "proto3";
+package <%= package %>;
+
+
+option csharp_namespace = "Broadcast.<%= packagePascalCase %>";
+
+// Interface exported by the server.
+// python -m grpc_tools.protoc --proto_path=. ./<%= package %>.proto --python_out=. --grpc_python_out=.
+
+service Service {
+<% serviceList.forEach(function(service){ -%>
+<%=    `// ${service.name} ${service.operation}`%>
+<%     service.protoServiceList.forEach(function(protoService){ -%>
+<%=    `   ${protoService}`%>
+<%     }); -%>
+<% }); %>    
+}
+
+message Empty {}
+
+message Group {
+    int32 group_id = 1;
+    string name = 2;
+    repeated User user_list = 3;
+    string description = 4;
+    string owner = 5;
+}
+
+message GroupRequest {
+    int32 group_id = 1;
+    string group_name = 2;
+}
+
+message GroupResponse {
+    repeated Group group_list = 1;    
+}
+
+message User {
+    int32 user_id = 1;    
+	string daimler_id = 2;
+    string email = 3;
+    string dive_id = 4;
+    string name = 5;
+    string surname = 6;
+    string telephone = 7;
+    string domain = 8;
+	string department = 9;
+}
+
+message UserRequest {
+    int32 user_id = 1;
+    string daimler_id = 2;
+}
+
+message UserResponse {
+    repeated User user_list = 1;
+}
+
+message PermissionRequest {
+    repeated Permission permission_list = 1;
+}
+
+message PermissionResponse {
+    repeated Permission permission_list = 1;
+}
+
+message Permission {
+    int32 permission_id = 1;
+    string access_level = 2;
+    string user_group = 3;
+    string name = 4;
+    string host = 5;
+    string folder_file = 6;
+    string comment = 7;
+    bool is_deleted = 8;
+    int32 priority_id = 9;
+}

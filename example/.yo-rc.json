@@ -4,9 +4,9 @@
       "package": "project",
       "csharpNamespace": "Broadcast.User",
       "serviceList": [
-        { "name": "ProjectCRUD", "request": "ProjectRequest", "response": "ProjectResponse"},
-        { "name": "ComponentCRUD", "request": "ComponentRequest", "response": "ComponentResponse"},
-        { "name": "ConfigurationCRUD", "request": "ConfigurationRequest", "response": "ConfigurationResponse"}
+        { "name": "Project", "operation":"CRUD", "request": "ProjectRequest", "response": "ProjectResponse"},
+        { "name": "Component", "operation":"CRUD", "request": "ComponentRequest", "response": "ComponentResponse"},
+        { "name": "Configuration", "operation":"CRUD", "request": "ConfigurationRequest", "response": "ConfigurationResponse"}
       ],
       "messageList" : [
         {

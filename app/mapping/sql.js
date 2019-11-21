@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const namingHelper = require('../helper/naming');
 
 const mapping = {
     "string"        :       "[varchar](max)",
@@ -6,20 +7,19 @@ const mapping = {
     "string unique" :       "[varchar](450)" // https://stackoverflow.com/questions/2863993
 }
 
-const pascal_case = string => _.upperFirst(_.camelCase(string));
 let allStructureIdNameSet = null,
     allRelationList = null;
 
 function addRelationList(existing) {
   allRelationList.forEach(relation => {
-    const tableName = pascal_case(relation.from + ' to ' + relation.to);
+    const tableName = namingHelper.casePascal(relation.from + ' to ' + relation.to);
     existing.push( 
       processStructure({
         name: tableName,
         propList: [
           { name:  tableName + "Id", type: "int32" },
-          { name:  pascal_case(relation.from + " id"), type: "int32", notNull: true },
-          { name:  pascal_case(relation.to + " id"), type: "int32", notNull: true },
+          { name:  namingHelper.casePascal(relation.from + " id"), type: "int32", notNull: true },
+          { name:  namingHelper.casePascal(relation.to + " id"), type: "int32", notNull: true },
         ],
         isRelation: true
       })
@@ -28,7 +28,7 @@ function addRelationList(existing) {
 }
 
 function processProperty(prop, structureName) {
-  prop.name = pascal_case(prop.name);
+  prop.name = namingHelper.casePascal(prop.name);
   
   if (prop.type == "string" && prop.hasOwnProperty("unique"))
     prop.type = "string unique";
@@ -48,7 +48,7 @@ function processProperty(prop, structureName) {
 }
 
 function processStructure(structure) {
-  structure.name = pascal_case(structure.name);  
+  structure.name = namingHelper.casePascal(structure.name);  
   if (!structure.hasOwnProperty("isRelation") && structure.relationList) { 
     // not a relation structure and has relation list
     structure.relationList.forEach(relation => {
@@ -62,7 +62,7 @@ function processStructure(structure) {
 
 function prepare_sql_data(data) {
     const clone_data = _.cloneDeep(data);
-    allStructureIdNameSet = new Set(clone_data.messageList.map(struct => pascal_case(struct.name)));
+    allStructureIdNameSet = new Set(clone_data.messageList.map(struct => namingHelper.casePascal(struct.name)));
     
     allRelationList = [];
     clone_data.messageList = clone_data.messageList.map(processStructure);
