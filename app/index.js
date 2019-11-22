@@ -57,7 +57,8 @@ module.exports = class extends Generator {
         {
           type: "input",
           name: "name",
-          message: "Microservice name"
+          message: "Microservice name",
+          store: true,
         }
       ]);
     }

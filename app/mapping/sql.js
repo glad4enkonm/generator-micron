@@ -43,20 +43,29 @@ function processProperty(prop, structureName) {
   prop.optionList = prop.hasOwnProperty("notNull") ? " NOT NULL" : " NULL";
   prop.optionList += prop.hasOwnProperty("unique") ? " UNIQUE" : "";
   const matchStructureName = prop.name.replace(/Id$/, '');
-  prop.optionList += allStructureIdNameSet.has(matchStructureName) ? ` FOREIGN KEY REFERENCES [${matchStructureName}]([${prop.name}])` : "";
+  if (allStructureIdNameSet.has(matchStructureName)) {
+    prop.optionList += ` FOREIGN KEY REFERENCES [${matchStructureName}]([${prop.name}])`;
+    if (prop.hasOwnProperty("fromRelation"))
+      prop.optionList += ' ON DELETE CASCADE';
+  }
   return prop;
 }
 
 function processStructure(structure) {
-  structure.name = namingHelper.casePascal(structure.name);  
-  if (!structure.hasOwnProperty("isRelation") && structure.relationList) { 
+  structure.name = namingHelper.casePascal(structure.name);
+  const structIsRelation = structure.hasOwnProperty("isRelation");
+  if (!structIsRelation && structure.relationList) { 
     // not a relation structure and has relation list
     structure.relationList.forEach(relation => {
       allRelationList.push({from:structure.name, to:relation});
     });
   }
 
-  structure.propList.map(prop => processProperty(prop, structure.name));
+  structure.propList.map(prop => {
+    if (structIsRelation)
+      prop.fromRelation = true;
+    processProperty( prop, structure.name);
+  });
   return structure;
 };
 
