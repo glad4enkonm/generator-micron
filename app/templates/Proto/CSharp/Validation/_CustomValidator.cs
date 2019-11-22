@@ -12,15 +12,9 @@ namespace Broadcast.<%= packagePascalCase %>.Validation
         public <%= namePascalCase %>Validator()
         {
             // Fill validation rules here
-
-
-            /*
-            RuleFor(group => group.Name).NotNull().NotEmpty().Matches("[A-Za-z][a-z0-9_]+");
-            RuleFor(group => group.UserList).NotEmpty();
-            RuleForEach(group => group.UserList).ChildRules(simleUser => {
-                simleUser.RuleFor(x => x.DaimlerId).NotNull().NotEmpty().Matches("[A-Za-z][a-z0-9_]+");
-            });
-             */
+<% ruleList.forEach(function(rule){ -%>
+            RuleFor(<%= name %> => <%= name %>.<%= rule.property %>).NotEmpty();
+<% }); -%>            
         }
 
     }

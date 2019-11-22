@@ -107,11 +107,17 @@ function processMessageStructure(structure) {
 }
 
 function messageToValidation(extendedMessage) {
-    return {
-        packagePascalCase,
+    const result = {
+        packagePascalCase: packagePascalCase,
         namePascalCase: extendedMessage.namePascal,
         name: extendedMessage.name
     };
+
+    result.ruleList = extendedMessage.propList
+        .filter(prop => prop.hasOwnProperty("notNull") && prop.notNull === true)
+        .map(prop => Object.assign({}, {property: namingHelper.casePascal(prop.name)}));
+    
+    return result;
 }
 
 function prepareProtoData(data) {
