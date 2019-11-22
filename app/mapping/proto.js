@@ -1,13 +1,13 @@
 const _ = require('lodash');
 const namingHelper = require('../helper/naming');
-let constructedServiceList = null, allRelationList = null;
+let constructedServiceList = null, allRelationList = null, packagePascalCase = null;
 
 const crudNamingPattern = {
     "C": function(name, request, response) {
         return `rpc Create${name}(${request}) returns (Empty) {}`;
     },
     "R": function(name, request, response) {
-        return `rpc Get${name}(Empty) returns (Empty) {${response}}`;
+        return `rpc Get${name}(Empty) returns (${response}) {}`;
     },
     "U": function(name, request, response) {
         return `rpc Update${name}(${request}) returns (Empty) {}`;
@@ -40,7 +40,7 @@ function addRelationMessage(existing) {
 
 function addRequestMessage(existing) { // to do: refactor to use one methor for addRequestMessage, addResponseMessage, ..
     const requestMessageList = existing
-        .filter(msg => !msg.isRequest && !msg.isResponce)
+        .filter(msg => !msg.isRequest && !msg.isResponse)
         .map(message => {
         return {
             name: namingHelper.casePascal(message.name + ' request'),
@@ -55,14 +55,14 @@ function addRequestMessage(existing) { // to do: refactor to use one methor for 
 
 function addResponseMessage(existing) {
     const requestMessageList = existing
-        .filter(msg => !msg.isRequest && !msg.isResponce)
+        .filter(msg => !msg.isRequest && !msg.isResponse)
         .map(message => {
         return {
-            name: namingHelper.casePascal(message.name + ' responce'),
+            name: namingHelper.casePascal(message.name + ' response'),
              propList: [
                 { name:  message.name, type: namingHelper.casePascal(message.name), isRepeated: true },
             ],
-            isResponce: true
+            isResponse: true
         };
     });
     existing.push(...requestMessageList.map(processMessageStructure)); //process and append
@@ -91,7 +91,7 @@ function processMessageStructure(structure) {
     });    
 
     
-    if (!structure.isRequest && !structure.isResponce) { // skip
+    if (!structure.isRequest && !structure.isResponse) { // skip
         const operation = structure.isRelation ? "CRD" : "CRUD";
         const constructedService = createServiceInstance(namingHelper.casePascal(structure.name), operation);
         constructedServiceList.push(constructedService);
@@ -106,10 +106,19 @@ function processMessageStructure(structure) {
     return structure;
 }
 
+function messageToValidation(extendedMessage) {
+    return {
+        packagePascalCase,
+        namePascalCase: extendedMessage.namePascal,
+        name: extendedMessage.name
+    };
+}
+
 function prepareProtoData(data) {
     const cloneData = _.cloneDeep(data);
     
-    cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);        
+    cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
+    packagePascalCase = cloneData.packagePascalCase;
 
     constructedServiceList = [];
     allRelationList = [];
@@ -120,6 +129,10 @@ function prepareProtoData(data) {
 
     cloneData.serviceList.push(...constructedServiceList);
     cloneData.serviceList = cloneData.serviceList.map(processServiceStructure);
+
+    cloneData.validatorList = cloneData.messageList
+        .filter(msg => !msg.isRelation && !msg.isRequest && !msg.isResponse)
+        .map(messageToValidation);
     
     return cloneData;
 }
