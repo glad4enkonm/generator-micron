@@ -29,6 +29,10 @@ function add_project_to_solution(project_name, solution_name) {
     formated_exec_sync(`dotnet sln ${solution_name}.sln add ${project_name}`);
 }
 
+function build_project(project_name) {
+    formated_exec_sync(`dotnet build ${project_name}`);
+}
+
 function add_package_to_project(package, project, version = null) {
     let command = `dotnet add ${project} package`;
     if (version != null)
@@ -42,4 +46,5 @@ module.exports = {
     new_console_project,
     add_project_to_solution,
     add_package_to_project,
+    build_project
 }

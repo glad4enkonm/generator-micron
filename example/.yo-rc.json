@@ -3,49 +3,130 @@
     "proto": {
       "package": "project",
       "csharpNamespace": "Broadcast.User",
-      "serviceList": [
-        { "name": "Project", "operation":"CRUD", "request": "ProjectRequest", "response": "ProjectResponse"},
-        { "name": "Component", "operation":"CRUD", "request": "ComponentRequest", "response": "ComponentResponse"},
-        { "name": "Configuration", "operation":"CRUD", "request": "ConfigurationRequest", "response": "ConfigurationResponse"}
+      "EXAMPLE_serviceList": [
+        {
+          "name": "Project",
+          "operation": "CRUD",
+          "request": "ProjectRequest",
+          "response": "ProjectResponse"
+        }
       ],
-      "messageList" : [
+      "serviceList": [],
+      "messageList": [
         {
           "name": "project",
           "propList": [
-            {"name":"project id", "type":     "int32"},
-            {"name":"name",       "type":    "string",    "notNull": true,    "unique": true },
-            {"name":"tag",        "type":    "string"},
-            {"name":"created by", "type":    "string",    "notNull": true },
-            {"name":"group",      "type":    "string"},
-            {"name":"description","type":    "string"},
-            {"name":"path",       "type":    "string",    "notNull": true,    "unique": true },
-            {"name":"owner",      "type":    "string",    "notNull": true }
+            {
+              "name": "project id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "created by",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "group",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "notNull": true
+            }
           ],
-          "relationList": ["configuration"]
+          "relationList": [
+            "configuration"
+          ]
         },
         {
           "name": "configuration",
           "propList": [
-            {"name":"configuration id", "type":    "int32"},
-            {"name":"name",             "type":   "string",     "notNull": true },
-            {"name":"tag",              "type":   "string"},
-            {"name":"created by",       "type":   "string",     "notNull": true },
-            {"name":"description",      "type":   "string"},
-            {"name":"path",             "type":   "string",     "notNull": true,    "unique": true }
+            {
+              "name": "configuration id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "created by",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            }
           ],
-          "relationList": ["component"]
+          "relationList": [
+            "component"
+          ]
         },
         {
           "name": "component",
           "propList": [
-            {"name":"component id",     "type":    "int32"},
-            {"name":"name",             "type":   "string",     "notNull": true },
-            {"name":"tag",              "type":   "string"},
-            {"name":"description",      "type":   "string"},
-            {"name":"path",             "type":   "string",     "notNull": true,    "unique": true }
+            {
+              "name": "component id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            }
           ]
-        } 
+        }
       ]
+    },
+    "promptValues": {
+      "name": "Project"
     }
   }
 }

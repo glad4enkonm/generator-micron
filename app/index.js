@@ -3,11 +3,11 @@ const _ = require('lodash');
 const yosay = require('yosay');
 const chalk = require('chalk');
 const pkg = require('../package.json');
-const dotnet = require('./dotnet');
+const dotnet = require('./helper/dotnet');
 const sql = require('./mapping/sql');
 const proto = require('./mapping/proto');
 
-function create_solution_and_projects(answers) {
+function createSolutionAndProjects(answers) {
   /* */
   dotnet.new_solution(answers.name);
   
@@ -27,7 +27,7 @@ function create_solution_and_projects(answers) {
   dotnet.add_package_to_project("Microsoft.Extensions.Configuration", "Core", "2.2.0");
 }
 
-function copy_db_files(that) {  // to do: defactor to separete generators
+function copyDbFiles(that) {  // to do: defactor to separete generators
   that.fs.copyTpl(that.templatePath("Database/_Program.cs"), that.destinationPath("Database/Program.cs"));
   that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Database/Database.runtimeconfig.json"));
   const data_to_render = sql.prepareData(that.config.get("proto"));
@@ -37,9 +37,10 @@ function copy_db_files(that) {  // to do: defactor to separete generators
     that.destinationPath("Database/Scripts/ScriptInit0001.sql"),
     data_to_render
   );
+  
 }
 
-function copy_proto_files(that) {  
+function copyProtoFiles(that) {  
   const data_to_render = proto.prepareData(that.config.get("proto"));
 
   that.fs.copyTpl(
@@ -47,6 +48,61 @@ function copy_proto_files(that) {
     that.destinationPath(`Proto/${data_to_render.package}.proto`),    
     data_to_render
   );
+
+  that.fs.copyTpl(
+    that.templatePath("Proto/CSharp/_Broadcast.csproj"), 
+    that.destinationPath(`Proto/CSharp/Broadcast.${data_to_render.packagePascalCase}.csproj`),    
+    data_to_render
+  );
+
+  that.fs.copyTpl(
+    that.templatePath("Proto/CSharp/Validation/_CommonValidator.cs"), 
+    that.destinationPath("Proto/CSharp/Validation/CommonValidator.cs"),    
+    data_to_render
+  );
+
+  data_to_render.validatorList.map(validator => {    
+    that.fs.copyTpl(
+        that.templatePath("Proto/CSharp/Validation/_CustomValidator.cs"), 
+      that.destinationPath(`Proto/CSharp/Validation/${validator.namePascalCase}Validator.cs`),
+      validator
+    );
+  });  
+}
+
+function copyCoreFiles(that) {  
+  const data_to_render = proto.prepareData(that.config.get("proto"));
+
+  that.fs.copyTpl(
+    that.templatePath("Proto/_.proto"), 
+    that.destinationPath(`Proto/${data_to_render.package}.proto`),    
+    data_to_render
+  );
+
+  that.fs.copyTpl(
+    that.templatePath("Proto/CSharp/_Broadcast.csproj"), 
+    that.destinationPath(`Proto/CSharp/Broadcast.${data_to_render.packagePascalCase}.csproj`),    
+    data_to_render
+  );
+
+  that.fs.copyTpl(
+    that.templatePath("Proto/CSharp/Validation/_CommonValidator.cs"), 
+    that.destinationPath("Proto/CSharp/Validation/CommonValidator.cs"),    
+    data_to_render
+  );
+
+  data_to_render.validatorList.map(validator => {    
+    that.fs.copyTpl(
+        that.templatePath("Proto/CSharp/Validation/_CustomValidator.cs"), 
+      that.destinationPath(`Proto/CSharp/Validation/${validator.namePascalCase}Validator.cs`),
+      validator
+    );
+  });  
+}
+
+function build() {
+  dotnet.build_project("Database");
+  dotnet.build_project("Proto\\CSharp\\Broadcast.Project.csproj");
 }
 
 module.exports = class extends Generator {
@@ -58,14 +114,18 @@ module.exports = class extends Generator {
           type: "input",
           name: "name",
           message: "Microservice name",
-          store: true,
+          store: true
         }
       ]);
     }
 
     writing() {
-      create_solution_and_projects(this.answers);
-      copy_db_files(this);
-      copy_proto_files(this);
+      createSolutionAndProjects(this.answers);
+      copyDbFiles(this);
+      copyProtoFiles(this);
+    }
+
+    install() {
+      build();
     }
 }
