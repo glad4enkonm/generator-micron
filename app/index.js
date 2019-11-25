@@ -28,6 +28,9 @@ function createSolutionAndProjects(answers) {
   dotnet.add_package_to_project("Microsoft.Extensions.DependencyInjection", "Core", "2.2.0");
   dotnet.add_package_to_project("Microsoft.Extensions.Configuration.Json", "Core", "2.2.0");
   dotnet.add_package_to_project("Microsoft.Extensions.Configuration", "Core", "2.2.0");
+
+  dotnet.add_package_to_project("Dapper", "Core", "2.0.30");
+  dotnet.add_package_to_project("Dapper.Contrib", "Core", "2.0.30");
 }
 
 function copyDbFiles(that) {  // to do: defactor to separete generators
@@ -91,6 +94,14 @@ function copyCoreFiles(that) {
     that.destinationPath(`Core/Business/Interface/I${dataToRender.packagePascalCase}ServerLogic.cs`),    
     dataToRender
   );
+
+  dataToRender.messageList.map(message => {    
+    that.fs.copyTpl(
+      that.templatePath("Core/Model/_Model.cs"), 
+      that.destinationPath(`Core/Model/${message.namePascal}.cs`),
+      message
+    );
+  });
 }
 
 function build() {
