@@ -83,6 +83,8 @@ function copyCoreFiles(that) {
 
   const dataToRender = core.prepareData(that.config.get("proto"), cache);
 
+  that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Core/Core.runtimeconfig.json"));
+
   that.fs.copyTpl(
     that.templatePath("Core/Grpc/_Server.cs"), 
     that.destinationPath(`Core/Grpc/${dataToRender.packagePascalCase}Server.cs`),    

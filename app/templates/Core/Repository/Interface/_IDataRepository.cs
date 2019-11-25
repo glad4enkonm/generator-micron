@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace <%= packagePascalCase %>.Repository.Interface
+namespace Core.Repository.Interface
 {
     public interface IDataRepository<T> where T : class
     {

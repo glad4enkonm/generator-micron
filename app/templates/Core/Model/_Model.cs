@@ -1,6 +1,6 @@
 using Dapper.Contrib.Extensions;
 
-namespace <%= packagePascalCase %>.Model
+namespace Core.Model
 {
 
     [Table("[<%= namePascal %>]")]

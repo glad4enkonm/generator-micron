@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using <%= packagePascalCase %>.Helper;
-using <%= packagePascalCase %>.Repository.Interface;
+using Core.Helper;
+using Core.Repository.Interface;
 using Dapper.Contrib.Extensions;
 
-namespace <%= packagePascalCase %>.Repository
+namespace Core.Repository
 {
     public class DataRepositoryBase<T>: IDataRepository<T> where T : class
     {

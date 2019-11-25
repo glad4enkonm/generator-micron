@@ -1,14 +1,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using <%= packagePascalCase %>.Model;
+using Core.Model;
 using System.Linq;
-using <%= packagePascalCase %>.Helper;
+using Core.Helper;
 using Dapper.Contrib.Extensions;
-using <%= packagePascalCase %>.Repository.Interface;
+using Core.Repository.Interface;
 using Dapper;
 
-namespace <%= packagePascalCase %>.Repository
+namespace Core.Repository
 {
     public class <%= namePascal %>Repository : DataRepositoryBase<<%= namePascal %>>, I<%= namePascal %>Repository
     {

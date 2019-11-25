@@ -1,6 +1,6 @@
 using Broadcast.<%= packagePascalCase %>;
 
-namespace <%= packagePascalCase %>.Business.Interface
+namespace Core.Business.Interface
 {
     public interface I<%= packagePascalCase %>ServerLogic
     {

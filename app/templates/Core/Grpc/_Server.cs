@@ -10,7 +10,7 @@ using <%= packagePascalCase %>.Business.Interface;
 using <%= packagePascalCase %>.Helper;
 using static Broadcast.<%= packagePascalCase %>.Service;
 
-namespace <%= packagePascalCase %>.Service
+namespace Core.Grpc
 {
     public class <%= serverName %> : ServiceBase, IHostedService
     {
