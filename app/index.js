@@ -81,8 +81,14 @@ function copyCoreFiles(that) {
   const dataToRender = core.prepareData(that.config.get("proto"), cache);
 
   that.fs.copyTpl(
-    that.templatePath("Core/Service/_Server.cs"), 
-    that.destinationPath(`Core/Service/${dataToRender.packagePascalCase}Server.cs`),    
+    that.templatePath("Core/Grpc/_Server.cs"), 
+    that.destinationPath(`Core/Grpc/${dataToRender.packagePascalCase}Server.cs`),    
+    dataToRender
+  );
+  
+  that.fs.copyTpl(
+    that.templatePath("Core/Business/Interface/_IServerLogic.cs"), 
+    that.destinationPath(`Core/Business/Interface/I${dataToRender.packagePascalCase}ServerLogic.cs`),    
     dataToRender
   );
 }
