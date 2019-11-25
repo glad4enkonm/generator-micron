@@ -103,6 +103,21 @@ function copyCoreFiles(that) {
     dataToRender
   );
 
+  that.fs.copyTpl(that.templatePath("Core/_Program.cs"), 
+    that.destinationPath("Core/Program.cs"), dataToRender);
+
+  that.fs.copyTpl(that.templatePath("Core/_config.json"), 
+    that.destinationPath("Core/config.json"), dataToRender);
+
+  // to do: add other microservice mappings
+  that.fs.copyTpl(that.templatePath("Core/Mapper/_Profile.cs"), 
+    that.destinationPath(`Core/Mapper/${dataToRender.packagePascalCase}Profile.cs`), dataToRender);
+
+  that.fs.copy(that.templatePath("Core/Helper/_SqlHelper.cs"), that.destinationPath("Core/Helper/SqlHelper.cs"));
+  that.fs.copy(that.templatePath("Core/Helper/_GrpcHelper.cs"), that.destinationPath("Core/Helper/GrpcHelper.cs"));
+  that.fs.copy(that.templatePath("Core/Helper/_ExceptionHelper.cs"), that.destinationPath("Core/Helper/ExceptionHelper.cs"));
+  that.fs.copy(that.templatePath("Core/Helper/_ConfigHelper.cs"), that.destinationPath("Core/Helper/ConfigHelper.cs"));
+
   dataToRender.messageList.map(message => {    
     that.fs.copyTpl(
       that.templatePath("Core/Model/_Model.cs"), 

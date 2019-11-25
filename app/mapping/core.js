@@ -12,6 +12,7 @@ const mapType = prop => mapping[prop];
 function prepareData(data, cache) {
     const cloneData = _.cloneDeep(data);
 
+    cloneData.packageUpperCase = cloneData.package.toUpperCase();
     cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     cloneData.serverName = cloneData.packagePascalCase + "Server";
     cloneData.serviceLogic = cloneData.packagePascalCase + "ServiceLogic";
