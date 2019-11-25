@@ -50,18 +50,23 @@ namespace <%= packagePascalCase %>.Service
         }
 
 <% serviceList.forEach(function(service){ -%>
-<%=    `#region ${service.name}${service.operation}`%>
+
+#region <%= service.name + service.operation %>
 <%     service.protoServiceList.forEach(function(protoService){ -%>
-<%-    `   public override async Task<${protoService.result}> ${protoService.method}(${protoService.param} request, ServerCallContext context)`%>
+        public override async Task<<%=protoService.result%>> <%=protoService.method%>(<%=protoService.param%> request, ServerCallContext context)
+        {
+<%        if (protoService.result != "Empty") { -%>
+            <%= protoService.result %> result = <%= serviceLogicInstance %>.<%= protoService.method %>(request);
+            return result;
+<%        } else { -%>
+            <%= serviceLogicInstance %>.<%= protoService.method %>(request);
+            return new Empty();
+<%        } -%>            
+        }
+
 <%     }); -%>
 #endregion
 <% }); -%>
-
-        public override async Task<Empty> SyncUser(Empty request, ServerCallContext context)
-        {
-            _userService.SyncUser();
-            return new Empty();
-        }
 
     }
 }
