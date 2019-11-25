@@ -94,11 +94,27 @@ function copyCoreFiles(that) {
     that.destinationPath(`Core/Business/Interface/I${dataToRender.packagePascalCase}ServerLogic.cs`),    
     dataToRender
   );
+  
+  that.fs.copyTpl(
+    that.templatePath("Core/Repository/_DataRepositoryBase.cs"), 
+    that.destinationPath("Core/Repository/DataRepositoryBase.cs"),
+    dataToRender
+  );
 
   dataToRender.messageList.map(message => {    
     that.fs.copyTpl(
       that.templatePath("Core/Model/_Model.cs"), 
       that.destinationPath(`Core/Model/${message.namePascal}.cs`),
+      message
+    );
+    that.fs.copyTpl(
+      that.templatePath("Core/Repository/Interface/_IRepository.cs"),
+      that.destinationPath(`Core/Repository/Interface/I${message.namePascal}Repository.cs`),
+      message
+    );
+    that.fs.copyTpl(
+      that.templatePath("Core/Repository/_Repository.cs"),
+      that.destinationPath(`Core/Repository/${message.namePascal}Repository.cs`),
       message
     );
   });
