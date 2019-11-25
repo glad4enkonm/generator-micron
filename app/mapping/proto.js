@@ -4,16 +4,16 @@ let constructedServiceList = null, allRelationList = null, packagePascalCase = n
 
 const crudNamingPattern = {
     "C": function(name, request, response) {
-        return `rpc Create${name}(${request}) returns (Empty) {}`;
+        return { method: "Create" + name, param: request, result: "Empty" };
     },
     "R": function(name, request, response) {
-        return `rpc Get${name}(Empty) returns (${response}) {}`;
+        return { method: "Get" + name, param: "Empty", result: response };
     },
     "U": function(name, request, response) {
-        return `rpc Update${name}(${request}) returns (Empty) {}`;
+        return { method: "Update" + name, param: request, result: "Empty" };
     },
     "D": function(name, request, response) {
-        return `rpc Delete${name}(${request}) returns (Empty) {}`;
+        return { method: "Delete" + name, param: request, result: "Empty" };
     },
 };
 

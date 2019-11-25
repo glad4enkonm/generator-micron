@@ -70,13 +70,13 @@ function processStructure(structure) {
 };
 
 function prepare_sql_data(data) {
-    const clone_data = _.cloneDeep(data);
-    allStructureIdNameSet = new Set(clone_data.messageList.map(struct => namingHelper.casePascal(struct.name)));
+    const cloneData = _.cloneDeep(data);
+    allStructureIdNameSet = new Set(cloneData.messageList.map(struct => namingHelper.casePascal(struct.name)));
     
     allRelationList = [];
-    clone_data.messageList = clone_data.messageList.map(processStructure);
-    addRelationList(clone_data.messageList);
-    return clone_data;
+    cloneData.messageList = cloneData.messageList.map(processStructure);
+    addRelationList(cloneData.messageList);
+    return cloneData;
   }
 
 const mapType = prop => mapping[prop];

@@ -1,34 +1,35 @@
+
 using System.Threading;
 using System.Threading.Tasks;
-using Broadcast.User;
+using Broadcast.<%= packagePascalCase %>;
 using Grpc.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UserProj.Business.Interface;
-using UserProj.Helper;
-using static Broadcast.User.Service;
+using <%= packagePascalCase %>.Business.Interface;
+using <%= packagePascalCase %>.Helper;
+using static Broadcast.<%= packagePascalCase %>.Service;
 
-namespace UserProj.Service
+namespace <%= packagePascalCase %>.Service
 {
-    public class UserServer : ServiceBase, IHostedService
+    public class <%= serverName %> : ServiceBase, IHostedService
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<UserServer> _logger;
-        private readonly IUserService _userService;
+        private readonly ILogger<<%= serverName %>> _logger;
+        private readonly I<%= serviceLogic %> <%= serviceLogicInstance %>;
 
         private Server _serverInstance;
 
-        public UserServer(IConfiguration configuration, ILogger<UserServer> logger, IUserService userService)
+        public <%= packagePascalCase %>Server(IConfiguration configuration, ILogger<UserServer> logger, I<%= serviceLogic %> <%= package %>ServiceLogic)
         {
             _configuration = configuration;
             _logger = logger;
-            _userService = userService;
+            <%= serviceLogicInstance %> = <%= package %>ServiceLogic;
         }        
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var config = _configuration.GetGrpcConfigObject("User");
+            var config = _configuration.GetGrpcConfigObject("<%= packagePascalCase %>");
 
             _serverInstance = new Server
             {
@@ -44,11 +45,17 @@ namespace UserProj.Service
         
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("stopping gRPC UserServer ...");
+            _logger.LogInformation("stopping gRPC <%= packagePascalCase %>Server ...");
             return _serverInstance.ShutdownAsync();
         }
 
-        #region User code
+<% serviceList.forEach(function(service){ -%>
+<%=    `#region ${service.name}${service.operation}`%>
+<%     service.protoServiceList.forEach(function(protoService){ -%>
+<%-    `   public override async Task<${protoService.result}> ${protoService.method}(${protoService.param} request, ServerCallContext context)`%>
+<%     }); -%>
+#endregion
+<% }); -%>
 
         public override async Task<Empty> SyncUser(Empty request, ServerCallContext context)
         {
@@ -56,71 +63,5 @@ namespace UserProj.Service
             return new Empty();
         }
 
-        public override async Task<Empty> CreateUser(User user, ServerCallContext context)
-        {
-            _userService.CreateUser(user);
-            return new Empty();
-        }
-
-        public override async Task<UserResponse> GetUsers(Empty request, ServerCallContext context)
-        {            
-            _userService.SyncUser();
-
-            UserResponse userResponse = _userService.GetUsers();
-            _logger.LogInformation($"GetUsers : {userResponse.UserList.Count} returned");
-
-            return userResponse;         
-        }
-
-        public override async Task<Empty> UpdateUser(User user, ServerCallContext context)
-        {
-            _userService.UpdateUser(user);
-            return new Empty();
-        }
-
-        public override async Task<Empty> DeleteUser(UserRequest userRequest, ServerCallContext context)
-        {
-            _userService.DeleteUser(userRequest.DaimlerId);
-            return new Empty();
-        }
-
-        #endregion
-
-        #region Group code        
-
-        public override async Task<Empty> CreateGroup(Group Group, ServerCallContext context)
-        {
-            _userService.CreateGroup(Group);
-            return new Empty();
-        }
-
-        public override async Task<Empty> UpdateGroup(Group Group, ServerCallContext context)
-        {
-            _userService.UpdateGroup(Group);
-            return new Empty();
-        }
-
-        public override async Task<Empty> DeleteGroup(GroupRequest groupRequest, ServerCallContext context)
-        {
-            _userService.DeleteGroup(groupRequest.GroupName);
-            return new Empty();
-        }
-
-        public override async Task<GroupResponse> GetGroups(Empty request, ServerCallContext context)
-        {
-            _userService.SyncGroup();
-
-            GroupResponse groupResponse = _userService.GetGroups();
-            _logger.LogInformation($"GetGroups : {groupResponse.GroupList.Count} returned");
-            return groupResponse;
-        }
-
-        public override async Task<Empty> SyncGroup(Empty request, ServerCallContext context)
-        {
-            _userService.SyncGroup();
-            return new Empty();
-        }
-
-        #endregion
     }
 }

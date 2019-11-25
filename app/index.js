@@ -1,4 +1,4 @@
-const Generator = require('yeoman-generator');
+  const Generator = require('yeoman-generator');
 const _ = require('lodash');
 const yosay = require('yosay');
 const chalk = require('chalk');
@@ -6,6 +6,9 @@ const pkg = require('../package.json');
 const dotnet = require('./helper/dotnet');
 const sql = require('./mapping/sql');
 const proto = require('./mapping/proto');
+const core = require('./mapping/core');
+
+let cache = {};
 
 function createSolutionAndProjects(answers) {
   /* */
@@ -30,38 +33,39 @@ function createSolutionAndProjects(answers) {
 function copyDbFiles(that) {  // to do: defactor to separete generators
   that.fs.copyTpl(that.templatePath("Database/_Program.cs"), that.destinationPath("Database/Program.cs"));
   that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Database/Database.runtimeconfig.json"));
-  const data_to_render = sql.prepareData(that.config.get("proto"));
+  const dataToRender = sql.prepareData(that.config.get("proto"));
   
   that.fs.copyTpl(
     that.templatePath("Database/ScriptInit0001.sql"), 
     that.destinationPath("Database/Scripts/ScriptInit0001.sql"),
-    data_to_render
+    dataToRender
   );
   
 }
 
 function copyProtoFiles(that) {  
-  const data_to_render = proto.prepareData(that.config.get("proto"));
+  const dataToRender = proto.prepareData(that.config.get("proto"));
+  cache.protoDataToRender = dataToRender;
 
   that.fs.copyTpl(
     that.templatePath("Proto/_.proto"), 
-    that.destinationPath(`Proto/${data_to_render.package}.proto`),    
-    data_to_render
+    that.destinationPath(`Proto/${dataToRender.package}.proto`),    
+    dataToRender
   );
 
   that.fs.copyTpl(
     that.templatePath("Proto/CSharp/_Broadcast.csproj"), 
-    that.destinationPath(`Proto/CSharp/Broadcast.${data_to_render.packagePascalCase}.csproj`),    
-    data_to_render
+    that.destinationPath(`Proto/CSharp/Broadcast.${dataToRender.packagePascalCase}.csproj`),    
+    dataToRender
   );
 
   that.fs.copyTpl(
     that.templatePath("Proto/CSharp/Validation/_CommonValidator.cs"), 
     that.destinationPath("Proto/CSharp/Validation/CommonValidator.cs"),    
-    data_to_render
+    dataToRender
   );
 
-  data_to_render.validatorList.map(validator => {    
+  dataToRender.validatorList.map(validator => {    
     that.fs.copyTpl(
         that.templatePath("Proto/CSharp/Validation/_CustomValidator.cs"), 
       that.destinationPath(`Proto/CSharp/Validation/${validator.namePascalCase}Validator.cs`),
@@ -71,33 +75,16 @@ function copyProtoFiles(that) {
 }
 
 function copyCoreFiles(that) {  
-  const data_to_render = proto.prepareData(that.config.get("proto"));
+  if (!cache.protoDataToRender) // fill cache
+    cache.protoDataToRender = proto.prepareData(that.config.get("proto"));
+
+  const dataToRender = core.prepareData(that.config.get("proto"), cache);
 
   that.fs.copyTpl(
-    that.templatePath("Proto/_.proto"), 
-    that.destinationPath(`Proto/${data_to_render.package}.proto`),    
-    data_to_render
+    that.templatePath("Core/Service/_Server.cs"), 
+    that.destinationPath(`Core/Service/${dataToRender.packagePascalCase}Server.cs`),    
+    dataToRender
   );
-
-  that.fs.copyTpl(
-    that.templatePath("Proto/CSharp/_Broadcast.csproj"), 
-    that.destinationPath(`Proto/CSharp/Broadcast.${data_to_render.packagePascalCase}.csproj`),    
-    data_to_render
-  );
-
-  that.fs.copyTpl(
-    that.templatePath("Proto/CSharp/Validation/_CommonValidator.cs"), 
-    that.destinationPath("Proto/CSharp/Validation/CommonValidator.cs"),    
-    data_to_render
-  );
-
-  data_to_render.validatorList.map(validator => {    
-    that.fs.copyTpl(
-        that.templatePath("Proto/CSharp/Validation/_CustomValidator.cs"), 
-      that.destinationPath(`Proto/CSharp/Validation/${validator.namePascalCase}Validator.cs`),
-      validator
-    );
-  });  
 }
 
 function build() {
@@ -123,6 +110,7 @@ module.exports = class extends Generator {
       createSolutionAndProjects(this.answers);
       copyDbFiles(this);
       copyProtoFiles(this);
+      copyCoreFiles(this);
     }
 
     install() {

@@ -14,7 +14,7 @@ service Service {
 <% serviceList.forEach(function(service){ -%>
 <%=    `// ${service.name} ${service.operation}`%>
 <%     service.protoServiceList.forEach(function(protoService){ -%>
-<%=    `   ${protoService}`%>
+<%=    `   rpc ${protoService.method}(${protoService.param}) returns (${protoService.result}) {}`%>
 <%     }); -%>
 
 <% }); -%>
