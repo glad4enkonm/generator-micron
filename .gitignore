@@ -62,3 +62,4 @@ typings/
 example/Core/
 example/Database/
 example/Proto/
+example/service/project.service

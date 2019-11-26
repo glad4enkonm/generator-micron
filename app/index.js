@@ -7,6 +7,7 @@ const dotnet = require('./helper/dotnet');
 const sql = require('./mapping/sql');
 const proto = require('./mapping/proto');
 const core = require('./mapping/core');
+const deploy = require('./mapping/deploy');
 
 let cache = {};
 
@@ -143,6 +144,14 @@ function copyCoreFiles(that) {
   });
 }
 
+function copyDeployFiles(that) {
+  const dataToRender = deploy.prepareData(that.config.get("proto"));
+  that.fs.copyTpl(that.templatePath("_setup.sh"), that.destinationPath("setup.sh"), dataToRender);
+  that.fs.copyTpl(that.templatePath("service/_start.sh"), that.destinationPath("service/start.sh"), dataToRender);
+  that.fs.copyTpl(that.templatePath("service/_.service"), that.destinationPath(`service/${dataToRender.package}.service`), dataToRender);
+
+}
+
 function build() {
   dotnet.build_project("Database");
   dotnet.build_project("Proto\\CSharp\\Broadcast.Project.csproj");
@@ -167,6 +176,7 @@ module.exports = class extends Generator {
       copyDbFiles(this);
       copyProtoFiles(this);
       copyCoreFiles(this);
+      copyDeployFiles(this);
     }
 
     install() {
