@@ -32,10 +32,10 @@ namespace Core.Business
 <% messageList.forEach(function(message){ -%>
             I<%= message.namePascal %>Repository <%= message.camelName %>Repository,
 <% }); -%>
-            // IGroupRepository groupRepository,
-            ILogger<<%= serverLogicName %>> logger, 
             // Used gRPC clients
             // IP4ApiClient p4ApiClient
+
+            ILogger<<%= serverLogicName %>> logger
         )
         {
 <% messageList.forEach(function(message){ -%>
@@ -87,6 +87,7 @@ namespace Core.Business
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
+            {
                 void action()
                 {
                     var modelToDelete = _<%= protoService.nameLowerCase%>Repository

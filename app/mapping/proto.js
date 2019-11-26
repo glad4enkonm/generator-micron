@@ -89,7 +89,8 @@ function processMessageStructure(structure) {
         prop.formatedName = _.snakeCase(prop.name);
         if (prop.isRepeated) {
             prop.type = "repeated " + prop.type;
-            prop.formatedName += "List";
+            prop.formatedName += "_list";
+            prop.formatedNameCamelCase += _.camelCase(prop.formatedName);
         }            
         prop.index = counter++;
         return prop;
