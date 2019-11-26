@@ -45,7 +45,7 @@ function addRequestMessage(existing) { // to do: refactor to use one methor for 
         return {
             name: namingHelper.casePascal(message.name + ' request'),
              propList: [
-                { name:  message.name + ' id', type: "int32" },                
+                { name:  message.name, type: namingHelper.casePascal(message.name) },                
             ],
             isRequest: true
         };
@@ -72,8 +72,11 @@ function addResponseMessage(existing) {
 function processServiceStructure(structure) {
     protoServiceList = [];
     for (key in crudNamingPattern) {
-        if (structure.operation.includes(key))
-            protoServiceList.push(crudNamingPattern[key](structure.name, structure.request, structure.response))
+        if (structure.operation.includes(key)) {
+            const service = crudNamingPattern[key](structure.name, structure.request, structure.response);
+            service.nameLowerCase = structure.name.toLowerCase();
+            protoServiceList.push(service);
+        }            
     }
     structure.protoServiceList = protoServiceList;        
     return structure;
@@ -84,8 +87,10 @@ function processMessageStructure(structure) {
     structure.namePascal = namingHelper.casePascal(structure.name);
     structure.propList = structure.propList.map(function(prop){
         prop.formatedName = _.snakeCase(prop.name);
-        if (prop.isRepeated) 
+        if (prop.isRepeated) {
             prop.type = "repeated " + prop.type;
+            prop.formatedName += "List";
+        }            
         prop.index = counter++;
         return prop;
     });    

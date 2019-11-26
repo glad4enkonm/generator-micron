@@ -3,7 +3,7 @@ using Broadcast = Broadcast.<%= packagePascalCase %>;
 
 namespace Core.Mapper
 {
-    public class <%= packagePascalCase %>AutoMapperProfile : Profile
+    public class <%= packagePascalCase %>Profile : Profile
     {
         public <%= packagePascalCase %>AutoMapperProfile()
         {            

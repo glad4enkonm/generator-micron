@@ -96,6 +96,12 @@ function copyCoreFiles(that) {
     that.destinationPath(`Core/Business/Interface/I${dataToRender.packagePascalCase}ServerLogic.cs`),    
     dataToRender
   );
+
+  that.fs.copyTpl(
+    that.templatePath("Core/Business/_ServerLogic.cs"), 
+    that.destinationPath(`Core/Business/${dataToRender.packagePascalCase}ServerLogic.cs`),    
+    dataToRender
+  );
   
   that.fs.copyTpl(
     that.templatePath("Core/Repository/_DataRepositoryBase.cs"), 

@@ -21,5 +21,8 @@
     "lodash": "^4.17.15",
     "yeoman-generator": "^4.2.0",
     "yosay": "^2.0.2"
+  },
+  "devDependencies": {
+    "ejs-lint": "^0.3.0"
   }
 }

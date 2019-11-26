@@ -15,6 +15,7 @@ function prepareData(data, cache) {
     cloneData.packageUpperCase = cloneData.package.toUpperCase();
     cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     cloneData.serverName = cloneData.packagePascalCase + "Server";
+    cloneData.serverLogicName = cloneData.packagePascalCase + "ServerLogic";
     cloneData.serviceLogic = cloneData.packagePascalCase + "ServiceLogic";
     cloneData.serviceLogicInstance = `_${cloneData.package}ServiceLogic`;
 
@@ -23,6 +24,7 @@ function prepareData(data, cache) {
         cache.protoDataToRender.messageList.filter(msg => !msg.isRequest && !msg.isResponse);
     cloneData.messageList = _.cloneDeep(messageExceptRequestResponse);
     cloneData.messageList = cloneData.messageList.map(msg => {
+        msg.camelName = _.camelCase(msg.name);
         msg.propList.map(prop => {
             prop.formatedName = namingHelper.casePascal(prop.formatedName);
             prop.type = mapType(prop.type);
