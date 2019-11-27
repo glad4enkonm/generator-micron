@@ -8,19 +8,20 @@ namespace Backend.GRPC.Interface
     {
 
 <% serviceList.forEach(function(service){ -%>
-#region <%= service.name + service.operation %>
+#       region <%= service.name + service.operation %>
 <%   service.protoServiceList.forEach(function(protoService){ -%>
 <%     if (protoService.method.startsWith("Get")) { -%>
-        Task<List<<%= service.name %>>> Get<%= service.name%>List();
+        Task<IEnumerable<<%= service.name %>>> Get<%= service.name%>();
 <%     } else if (protoService.method.startsWith("Create")) { -%>
         Task Create<%= service.name %>(<%= service.name %> instance);
 <%     } else if (protoService.method.startsWith("Update")) { -%>
-        Task Create<%= service.name %>(<%= service.name %> instance);
+        Task Update<%= service.name %>(<%= service.name %> instance);
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
         Task Delete<%= service.name %>(<%= service.name %> instance);
-<%     } -%>
+<%     } %>
 <%   }); -%>
-#endregion
+        #endregion
+
 <% }); -%>
     }
 }
