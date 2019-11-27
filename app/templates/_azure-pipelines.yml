@@ -10,6 +10,7 @@ steps:
   displayName: build
   env:
    DOTNET_CLI_HOME: /tmp
+
 - bash: |
    # Prepare an installer folder
    
@@ -28,6 +29,7 @@ steps:
    cp -r $(Build.Repository.LocalPath)/Database/Scripts $(Build.Repository.LocalPath)/install/Database
    # Copy microservice folder
    cp $(Build.Repository.LocalPath)/Core/bin/Release/netcoreapp2.2/linux-x64/publish/* $(Build.Repository.LocalPath)/install/$(microservice.name)
+   cp $(Build.Repository.LocalPath)/Core/config.json $(Build.Repository.LocalPath)/install/$(microservice.name)/config.json
    
    cp $(Build.Repository.LocalPath)/service/start.sh $(Build.Repository.LocalPath)/install/   
    cp $(Build.Repository.LocalPath)/setup.sh $(Build.Repository.LocalPath)/install/
