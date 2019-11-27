@@ -8,6 +8,7 @@ const sql = require('./mapping/sql');
 const proto = require('./mapping/proto');
 const core = require('./mapping/core');
 const deploy = require('./mapping/deploy');
+const backend = require('./mapping/backend');
 
 let cache = {};
 
@@ -150,6 +151,18 @@ function copyCoreFiles(that) {
   });
 }
 
+function copyBackendFiles(that) {
+  if (!cache.protoDataToRender) // fill cache
+    cache.protoDataToRender = proto.prepareData(that.config.get("proto"));
+
+  const dataToRender = backend.prepareData(that.config.get("proto"), cache);
+
+  that.fs.copyTpl(that.templatePath("Backend/Controller/_Controller.cs"),
+    that.destinationPath(`Backend/Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);  
+  that.fs.copyTpl(that.templatePath("Backend/GRPC/Interface/_IClient.cs"),
+    that.destinationPath(`Backend/GRPC/Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
+}
+
 function copyDeployFiles(that) {
   const dataToRender = deploy.prepareData(that.config.get("proto"));
   that.fs.copyTpl(that.templatePath("_setup.sh"), that.destinationPath("setup.sh"), dataToRender);
@@ -183,6 +196,7 @@ module.exports = class extends Generator {
       copyDbFiles(this);
       copyProtoFiles(this);
       copyCoreFiles(this);
+      copyBackendFiles(this);
       copyDeployFiles(this);
     }
 
