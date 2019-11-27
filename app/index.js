@@ -32,6 +32,9 @@ function createSolutionAndProjects(answers) {
 
   dotnet.add_package_to_project("Dapper", "Core", "2.0.30");
   dotnet.add_package_to_project("Dapper.Contrib", "Core", "2.0.30");
+
+  dotnet.add_package_to_project("AutoMapper", "Core", "8.1.1");
+  dotnet.add_package_to_project("System.Data.SqlClient", "Core", "4.7.0");
 }
 
 function copyDbFiles(that) {  // to do: defactor to separete generators
@@ -125,6 +128,9 @@ function copyCoreFiles(that) {
   that.fs.copy(that.templatePath("Core/Helper/_ExceptionHelper.cs"), that.destinationPath("Core/Helper/ExceptionHelper.cs"));
   that.fs.copy(that.templatePath("Core/Helper/_ConfigHelper.cs"), that.destinationPath("Core/Helper/ConfigHelper.cs"));
 
+  that.fs.copy(that.templatePath("Core/Repository/Interface/_IDataRepository.cs"), 
+    that.destinationPath("Core/Repository/Interface/IDataRepository.cs"));
+
   dataToRender.messageList.map(message => {    
     that.fs.copyTpl(
       that.templatePath("Core/Model/_Model.cs"), 
@@ -155,6 +161,7 @@ function copyDeployFiles(that) {
 function build() {
   dotnet.build_project("Database");
   dotnet.build_project("Proto\\CSharp\\Broadcast.Project.csproj");
+  dotnet.build_project("Core");
 }
 
 module.exports = class extends Generator {

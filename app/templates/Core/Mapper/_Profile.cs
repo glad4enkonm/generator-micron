@@ -1,5 +1,4 @@
 using AutoMapper;
-using Broadcast = Broadcast.<%= packagePascalCase %>;
 
 namespace Core.Mapper
 {
@@ -10,7 +9,7 @@ namespace Core.Mapper
             AllowNullDestinationValues = false;
 
 <% messageList.forEach(function(message){ -%>
-            CreateMap<Broadcast.<%= message.namePascal %>, Model.<%= message.namePascal %>>().ReverseMap();
+            CreateMap< Broadcast.<%= packagePascalCase %>.<%= message.namePascal %>, Model.<%= message.namePascal %>>().ReverseMap();
 <% }); -%>
 
         }

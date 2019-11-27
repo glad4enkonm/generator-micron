@@ -16,8 +16,8 @@ function prepareData(data, cache) {
     cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     cloneData.serverName = cloneData.packagePascalCase + "Server";
     cloneData.serverLogicName = cloneData.packagePascalCase + "ServerLogic";
-    cloneData.serviceLogic = cloneData.packagePascalCase + "ServiceLogic";
-    cloneData.serviceLogicInstance = `_${cloneData.package}ServiceLogic`;
+    cloneData.serverLogic = cloneData.packagePascalCase + "ServerLogic";
+    cloneData.serverLogicInstance = `_${cloneData.package}ServerLogic`;
 
     cloneData.serviceList = _.cloneDeep(cache.protoDataToRender.serviceList);
     const messageExceptRequestResponse =  

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -8,10 +7,9 @@ using Broadcast.<%= packagePascalCase %>;
 using Core.Business.Interface;
 using Core.Helper;
 using Core.Repository.Interface;
-using Core.Service.Interface;
+using Core.Mapper;
 
 using static Core.Helper.ExceptionHelper;
-using static Core.Helper.UpdateHelper;
 
 namespace Core.Business
 {
@@ -41,7 +39,6 @@ namespace Core.Business
 <% messageList.forEach(function(message){ -%>
             _<%= message.camelName %>Repository = <%= message.camelName %>Repository;
 <% }); -%>
-            _groupRepository = groupRepository;
 
             _logger = logger;
             
@@ -60,8 +57,8 @@ namespace Core.Business
             {
                 <%= protoService.result %> function()
                 {
-                    IEnumerable<Model.<%= service.name%>> <%= protoService.nameLowerCase%>List = _<%= protoService.nameLowerCase%>Repository.GetAll();
-                    var listTransport = _mapper.Map<IEnumerable<<%= service.name%>>>(<%= service.nameLowerCase%>List);
+                    IEnumerable<Model.<%= service.name%>> <%= protoService.nameCamelCase%>List = _<%= protoService.nameCamelCase%>Repository.GetAll();
+                    var listTransport = _mapper.Map<IEnumerable<<%= service.name%>>>(<%= protoService.nameCamelCase%>List);
                     return listTransport.Construct<<%= protoService.result %>, <%= service.name%>>(resp => resp.<%= service.name%>List);
                 }
                 return ExecuteCatchLoagAndRethrowException(function, _logger, "<%= protoService.method %>");
@@ -71,7 +68,7 @@ namespace Core.Business
                 var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                 void action()
                 {                    
-                    _<%= protoService.nameLowerCase%>Repository.Insert(model);
+                    _<%= protoService.nameCamelCase%>Repository.Insert(model);
                 }
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Update")) { -%>
@@ -80,9 +77,9 @@ namespace Core.Business
                 var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                 void action()
                 {                 
-                    var existingModel = _<%= protoService.nameLowerCase%>Repository
+                    var existingModel = _<%= protoService.nameCamelCase%>Repository
                         .Get(request.<%= service.name %>.<%= service.name %>Id);
-                    _<%= protoService.nameLowerCase%>Repository.Update(model);
+                    _<%= protoService.nameCamelCase%>Repository.Update(model);
                 }
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
@@ -90,9 +87,9 @@ namespace Core.Business
             {
                 void action()
                 {
-                    var modelToDelete = _<%= protoService.nameLowerCase%>Repository
+                    var modelToDelete = _<%= protoService.nameCamelCase%>Repository
                         .Get(request.<%= service.name %>.<%= service.name %>Id);
-                    _<%= protoService.nameLowerCase%>Repository.Delete(modelToDelete);
+                    _<%= protoService.nameCamelCase%>Repository.Delete(modelToDelete);
                 };
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } -%>                

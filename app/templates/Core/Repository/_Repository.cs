@@ -1,12 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using Core.Model;
-using System.Linq;
-using Core.Helper;
-using Dapper.Contrib.Extensions;
 using Core.Repository.Interface;
-using Dapper;
 
 namespace Core.Repository
 {

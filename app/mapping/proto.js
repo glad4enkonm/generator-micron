@@ -75,6 +75,7 @@ function processServiceStructure(structure) {
         if (structure.operation.includes(key)) {
             const service = crudNamingPattern[key](structure.name, structure.request, structure.response);
             service.nameLowerCase = structure.name.toLowerCase();
+            service.nameCamelCase = _.camelCase(structure.name);
             protoServiceList.push(service);
         }            
     }

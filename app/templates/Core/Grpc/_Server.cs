@@ -6,8 +6,8 @@ using Grpc.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using <%= packagePascalCase %>.Business.Interface;
-using <%= packagePascalCase %>.Helper;
+using Core.Business.Interface;
+using Core.Helper;
 using static Broadcast.<%= packagePascalCase %>.Service;
 
 namespace Core.Grpc
@@ -16,15 +16,16 @@ namespace Core.Grpc
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<<%= serverName %>> _logger;
-        private readonly I<%= serviceLogic %> <%= serviceLogicInstance %>;
+        private readonly I<%= serverLogic %> <%= serverLogicInstance %>;
 
         private Server _serverInstance;
 
-        public <%= packagePascalCase %>Server(IConfiguration configuration, ILogger<UserServer> logger, I<%= serviceLogic %> <%= package %>ServiceLogic)
+        public <%= packagePascalCase %>Server(IConfiguration configuration, ILogger<<%= packagePascalCase %>Server> logger, 
+            I<%= serverLogic %> <%= package %>serverLogic)
         {
             _configuration = configuration;
             _logger = logger;
-            <%= serviceLogicInstance %> = <%= package %>ServiceLogic;
+            <%= serverLogicInstance %> = <%= package %>serverLogic;
         }        
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -56,10 +57,10 @@ namespace Core.Grpc
         public override async Task<<%=protoService.result%>> <%=protoService.method%>(<%=protoService.param%> request, ServerCallContext context)
         {
 <%        if (protoService.result != "Empty") { -%>
-            <%= protoService.result %> result = <%= serviceLogicInstance %>.<%= protoService.method %>(request);
+            <%= protoService.result %> result = <%= serverLogicInstance %>.<%= protoService.method %>(request);
             return result;
 <%        } else { -%>
-            <%= serviceLogicInstance %>.<%= protoService.method %>(request);
+            <%= serverLogicInstance %>.<%= protoService.method %>(request);
             return new Empty();
 <%        } -%>            
         }
