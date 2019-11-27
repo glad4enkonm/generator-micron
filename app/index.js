@@ -155,7 +155,7 @@ function copyDeployFiles(that) {
   that.fs.copyTpl(that.templatePath("_setup.sh"), that.destinationPath("setup.sh"), dataToRender);
   that.fs.copyTpl(that.templatePath("service/_start.sh"), that.destinationPath("service/start.sh"), dataToRender);
   that.fs.copyTpl(that.templatePath("service/_.service"), that.destinationPath(`service/${dataToRender.package}.service`), dataToRender);
-
+  that.fs.copy(that.templatePath("_azure-pipelines.yml"), that.destinationPath("azure-pipelines.yml"));
 }
 
 function build() {

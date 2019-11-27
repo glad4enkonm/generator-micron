@@ -43,7 +43,7 @@ cp -f ./start.sh $INSTALL_FOLDER/$serviceName
 chmod a+x $INSTALL_FOLDER/$serviceName/start.sh
 
 # Add execute permissions
-chmod a+x $INSTALL_FOLDER/$serviceName/UserProj
+chmod a+x $INSTALL_FOLDER/$serviceName/Core
 
 envsubst < ./$serviceName/config.json > $INSTALL_FOLDER/$serviceName/config.json
 
