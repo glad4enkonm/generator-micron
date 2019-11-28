@@ -161,6 +161,8 @@ function copyBackendFiles(that) {
     that.destinationPath(`Backend/Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);  
   that.fs.copyTpl(that.templatePath("Backend/GRPC/Interface/_IClient.cs"),
     that.destinationPath(`Backend/GRPC/Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
+  that.fs.copyTpl(that.templatePath("Backend/GRPC/_Client.cs"),
+    that.destinationPath(`Backend/GRPC/${dataToRender.packagePascalCase}Client.cs`), dataToRender);
 }
 
 function copyDeployFiles(that) {
