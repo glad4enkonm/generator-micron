@@ -64,19 +64,19 @@ namespace Core.Business
                 return ExecuteCatchLoagAndRethrowException(function, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Create")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
-            {
-                var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
+            {                
                 void action()
                 {                    
+                    var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                     _<%= protoService.nameCamelCase%>Repository.Insert(model);
                 }
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Update")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
-            {
-                var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
+            {                
                 void action()
                 {                 
+                    var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                     var existingModel = _<%= protoService.nameCamelCase%>Repository
                         .Get(request.<%= service.name %>.<%= service.name %>Id);
                     _<%= protoService.nameCamelCase%>Repository.Update(model);

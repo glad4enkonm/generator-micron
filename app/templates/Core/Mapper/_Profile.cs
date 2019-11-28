@@ -4,7 +4,7 @@ namespace Core.Mapper
 {
     public class <%= packagePascalCase %>Profile : Profile
     {
-        public <%= packagePascalCase %>AutoMapperProfile()
+        public <%= packagePascalCase %>Profile()
         {            
             AllowNullDestinationValues = false;
 
