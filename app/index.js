@@ -156,6 +156,7 @@ function copyBackendFiles(that) {
     cache.protoDataToRender = proto.prepareData(that.config.get("proto"));
 
   const dataToRender = backend.prepareData(that.config.get("proto"), cache);
+  that.fs.copy(that.templatePath("Backend/Helper/_EndpointHelper.cs"), that.destinationPath("Backend/Helper/EndpointHelper.cs"));
 
   that.fs.copyTpl(that.templatePath("Backend/Controller/_Controller.cs"),
     that.destinationPath(`Backend/Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);  

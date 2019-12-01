@@ -32,19 +32,19 @@ namespace Backend.GRPC
 #region <%= service.name + service.operation %>
 <%   service.protoServiceList.forEach(function(protoService){ -%>
 <%     if (protoService.method.startsWith("Get")) { -%>
-        public async Task<IEnumerable<<%= service.name %>>> Get<%= service.name %>()
+        public async Task<IEnumerable<<%= service.name %>>> Get<%= service.name %>Async()
         {
             <%= service.name %>Response response = await Client.Get<%= service.name %>Async(new Empty());
             return response.<%= service.name %>List;
         }
 <%     } else if (protoService.method.startsWith("Create")) { -%>
-        public async Task Create<%= service.name %>(<%= service.name %> instance) =>
+        public async Task Create<%= service.name %>Async(<%= service.name %> instance) =>
             await Client.Create<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
 <%     } else if (protoService.method.startsWith("Update")) { -%>
-        public async Task Update<%= service.name %>(<%= service.name %> instance) =>
+        public async Task Update<%= service.name %>Async(<%= service.name %> instance) =>
             await Client.Update<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
-        public async Task Delete<%= service.name %>(<%= service.name %> instance) =>
+        public async Task Delete<%= service.name %>Async(<%= service.name %> instance) =>
             await Client.Delete<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
 <%     } -%>
 

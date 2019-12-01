@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Backend.GRPC.Interface;
 using Broadcast.<%= packagePascalCase %>;
@@ -31,41 +32,41 @@ namespace Backend.Controller
 <%     if (protoService.method.startsWith("Get")) { -%>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpGet("<%= service.name %>")]
-        public ActionResult<IEnumerable<<%= service.name %>>> Get<%= service.name %>()
+        public async Task<ActionResult<IEnumerable<<%= service.name %>>>> Get<%= service.name %>Async()
         {
-            return ExecuteLoagAndReturnStatus(() => _<%= package %>Client.Get<%= service.name %>().Result, _logger, "Get<%= service.name %>", this);
+            return await ExecuteLoagAndReturnStatusAsync(async () => await _<%= package %>Client.Get<%= service.name %>Async(), _logger, "Get<%= service.name %>Async", this);
         }
 <%     } else if (protoService.method.startsWith("Create")) { -%>
         [HttpPost("<%= service.name %>")]
-        public ActionResult Create<%= service.name %>(<%= service.name %> <%= protoService.nameCamelCase %>)
+        public async Task<ActionResult> Create<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
         {
-            async void action()
+            async Task action()
             {
                 <%= protoService.nameCamelCase %>.ValidateAndThrow();
-                await _<%= package %>Client.Create<%= service.name %>(<%= protoService.nameCamelCase %>);
+                await _<%= package %>Client.Create<%= service.name %>Async(<%= protoService.nameCamelCase %>);
             }
-            return ExecuteLoagAndReturnStatus(action, _logger, "Add<%= service.name %>", this);
+            return await ExecuteLoagAndReturnStatusAsync(action, _logger, "Add<%= service.name %>Async", this);
         }
 <%     } else if (protoService.method.startsWith("Update")) { -%>
         [HttpPut("<%= service.name %>")]
-        public ActionResult Update<%= service.name %>(<%= service.name %> <%= protoService.nameCamelCase %>)
+        public async Task<ActionResult> Update<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
         {
-            async void action()
+            async Task action()
             {
                 <%= protoService.nameCamelCase %>.ValidateAndThrow();
-                await _<%= package %>Client.Update<%= service.name %>(<%= protoService.nameCamelCase %>);
+                await _<%= package %>Client.Update<%= service.name %>Async(<%= protoService.nameCamelCase %>);
             }
-            return ExecuteLoagAndReturnStatus(action, _logger, "Update<%= service.name %>", this);
+            return await ExecuteLoagAndReturnStatusAsync(action, _logger, "Update<%= service.name %>Async", this);
         }
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
         [HttpDelete("<%= service.name %>")]
-        public ActionResult Delete<%= service.name %>(<%= service.name %> <%= protoService.nameCamelCase %>)
+        public async Task<ActionResult> Delete<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
         {
-            async void action()
+            async Task action()
             {
-                await _<%= package %>Client.Delete<%= service.name %>(<%= protoService.nameCamelCase %>);
+                await _<%= package %>Client.Delete<%= service.name %>Async(<%= protoService.nameCamelCase %>);
             }
-            return ExecuteLoagAndReturnStatus(action, _logger, "Delete<%= service.name %>", this);
+            return await ExecuteLoagAndReturnStatusAsync(action, _logger, "Delete<%= service.name %>Async", this);
         }
 <%     } -%>
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using System;
 
 using Broadcast.<%= packagePascalCase %>;
 
@@ -79,6 +80,8 @@ namespace Core.Business
                     var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                     var existingModel = _<%= protoService.nameCamelCase%>Repository
                         .Get(request.<%= service.name %>.<%= service.name %>Id);
+                    if (existingModel == null)
+                        throw new ArgumentException($"Update<%= service.name %>: <%= service.name %> with id = {model.<%= service.name %>Id} not found.");
                     _<%= protoService.nameCamelCase%>Repository.Update(model);
                 }
                 ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
