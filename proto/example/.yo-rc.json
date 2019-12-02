@@ -1,0 +1,142 @@
+{
+  "generator-micron": {
+    "proto": {
+      "package": "project",
+      "csharpNamespace": "Broadcast.User",
+      "EXAMPLE_serviceList": [
+        {
+          "name": "Project",
+          "operation": "CRUD",
+          "request": "ProjectRequest",
+          "response": "ProjectResponse"
+        }
+      ],
+      "serviceList": [],
+      "messageList": [
+        {
+          "name": "project",
+          "propList": [
+            {
+              "name": "project id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "created by",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "group",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "owner",
+              "type": "string",
+              "notNull": true
+            }
+          ],
+          "relationList": [
+            "configuration"
+          ]
+        },
+        {
+          "name": "configuration",
+          "propList": [
+            {
+              "name": "configuration id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "created by",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "json",
+              "type": "string",
+              "notNull": true
+            }
+          ],
+          "relationList": [
+            "component"
+          ]
+        },
+        {
+          "name": "component",
+          "propList": [
+            {
+              "name": "component id",
+              "type": "int32"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "tag",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "json",
+              "type": "string",
+              "notNull": true
+            }
+          ]
+        }
+      ]
+    },
+    "promptValues": {
+      "name": "Project"
+    }
+  }
+}

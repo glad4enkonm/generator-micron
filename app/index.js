@@ -3,12 +3,12 @@ const _ = require('lodash');
 const yosay = require('yosay');
 const chalk = require('chalk');
 const pkg = require('../package.json');
-const dotnet = require('./helper/dotnet');
-const sql = require('./mapping/sql');
-const proto = require('./mapping/proto');
-const core = require('./mapping/core');
-const deploy = require('./mapping/deploy');
-const backend = require('./mapping/backend');
+const dotnet = require('../helper/dotnet');
+const sql = require('../mapping/sql');
+const proto = require('../mapping/proto');
+const core = require('../mapping/core');
+const deploy = require('../mapping/deploy');
+const backend = require('../mapping/backend');
 
 let cache = {};
 
@@ -41,7 +41,7 @@ function createSolutionAndProjects(answers) {
 function copyDbFiles(that) {  // to do: defactor to separete generators
   that.fs.copyTpl(that.templatePath("Database/_Program.cs"), that.destinationPath("Database/Program.cs"));
   that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Database/Database.runtimeconfig.json"));
-  const dataToRender = sql.prepareData(that.config.get("proto"));
+  const dataToRender = sql.prepareData(that.answers.proto);
   
   that.fs.copyTpl(
     that.templatePath("Database/ScriptInit0001.sql"), 
@@ -52,7 +52,7 @@ function copyDbFiles(that) {  // to do: defactor to separete generators
 }
 
 function copyProtoFiles(that) {  
-  const dataToRender = proto.prepareData(that.config.get("proto"));
+  const dataToRender = proto.prepareData(that.answers.proto);
   cache.protoDataToRender = dataToRender;
 
   that.fs.copyTpl(
@@ -84,9 +84,9 @@ function copyProtoFiles(that) {
 
 function copyCoreFiles(that) {  
   if (!cache.protoDataToRender) // fill cache
-    cache.protoDataToRender = proto.prepareData(that.config.get("proto"));
+    cache.protoDataToRender = proto.prepareData(that.answers.proto);
 
-  const dataToRender = core.prepareData(that.config.get("proto"), cache);
+  const dataToRender = core.prepareData(that.answers.proto, cache);
 
   that.fs.copyTpl(that.templatePath("Common/_runtimeconfig.json"), that.destinationPath("Core/Core.runtimeconfig.json"));
 
@@ -153,9 +153,9 @@ function copyCoreFiles(that) {
 
 function copyBackendFiles(that) {
   if (!cache.protoDataToRender) // fill cache
-    cache.protoDataToRender = proto.prepareData(that.config.get("proto"));
+    cache.protoDataToRender = proto.prepareData(that.answers.proto);
 
-  const dataToRender = backend.prepareData(that.config.get("proto"), cache);
+  const dataToRender = backend.prepareData(that.answers.proto, cache);
   that.fs.copy(that.templatePath("Backend/Helper/_EndpointHelper.cs"), that.destinationPath("Backend/Helper/EndpointHelper.cs"));
 
   that.fs.copyTpl(that.templatePath("Backend/Controller/_Controller.cs"),
@@ -167,7 +167,7 @@ function copyBackendFiles(that) {
 }
 
 function copyDeployFiles(that) {
-  const dataToRender = deploy.prepareData(that.config.get("proto"));
+  const dataToRender = deploy.prepareData(that.answers.proto);
   that.fs.copyTpl(that.templatePath("_setup.sh"), that.destinationPath("setup.sh"), dataToRender);
   that.fs.copyTpl(that.templatePath("service/_start.sh"), that.destinationPath("service/start.sh"), dataToRender);
   that.fs.copyTpl(that.templatePath("service/_.service"), that.destinationPath(`service/${dataToRender.package}.service`), dataToRender);
@@ -176,28 +176,35 @@ function copyDeployFiles(that) {
 
 function build() {
   dotnet.build_project("Database");
-  dotnet.build_project("Proto\\CSharp\\Broadcast.Project.csproj");
   dotnet.build_project("Core");
 }
 
 module.exports = class extends Generator {
+    initializing() {
+      this.composeWith(require.resolve('../proto'));      
+      
+      const config = this.config.getAll();
+      this.answers = {...config.promptValues, proto: config.proto};
+    } 
+
     async prompting() {
       this.log(yosay('Welcome to the Yeoman ' + chalk.green('micron') + ' (' + pkg.version + ')' + ' generator!'));
       
-      this.answers = await this.prompt([
-        {
-          type: "input",
-          name: "name",
-          message: "Microservice name",
-          store: true
-        }
-      ]);
+      if (!this.answers.name) {
+        this.answers = await this.prompt([
+          {
+            type: "input",
+            name: "name",
+            message: "Microservice name",
+            store: true
+          }
+        ]);
+      }
     }
 
     writing() {
       createSolutionAndProjects(this.answers);
       copyDbFiles(this);
-      copyProtoFiles(this);
       copyCoreFiles(this);
       copyBackendFiles(this);
       copyDeployFiles(this);
