@@ -59,7 +59,5 @@ typings/
 
 # next.js build output
 .next
-example/Core/
-example/Database/
-example/Proto/
-example/service/project.service
+*/example/*
+!.yo-rc.json

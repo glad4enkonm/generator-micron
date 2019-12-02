@@ -89,6 +89,11 @@
               "type": "string",
               "notNull": true,
               "unique": true
+            },
+            {
+              "name": "json",
+              "type": "string",
+              "notNull": true
             }
           ],
           "relationList": [
@@ -120,6 +125,11 @@
               "type": "string",
               "notNull": true,
               "unique": true
+            },
+            {
+              "name": "json",
+              "type": "string",
+              "notNull": true
             }
           ]
         }
