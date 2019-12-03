@@ -13,7 +13,8 @@ function prepareData(data, cache) {
     const cloneData = _.cloneDeep(data);
 
     cloneData.packageUpperCase = cloneData.package.toUpperCase();
-    cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
+    if (!cloneData.hasOwnProperty("packagePascalCase"))
+        cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     cloneData.serverName = cloneData.packagePascalCase + "Server";
     cloneData.serverLogicName = cloneData.packagePascalCase + "ServerLogic";
     cloneData.serverLogic = cloneData.packagePascalCase + "ServerLogic";

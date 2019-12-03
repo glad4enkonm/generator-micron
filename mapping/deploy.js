@@ -6,7 +6,9 @@ function prepareData(data, cache) {
     const cloneData = _.cloneDeep(data);
 
     cloneData.packageUpperCase = cloneData.package.toUpperCase();    
-    cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
+    
+    if (!cloneData.hasOwnProperty("packagePascalCase"))
+        cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     
     return cloneData;
 }

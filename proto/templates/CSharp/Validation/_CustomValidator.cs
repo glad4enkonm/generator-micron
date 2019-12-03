@@ -21,15 +21,15 @@ namespace Broadcast.<%= packagePascalCase %>.Validation
         private static readonly Lazy<<%= namePascalCase %>Validator> _lazy<%= namePascalCase %>Validator
             = new Lazy<<%= namePascalCase %>Validator>(() => new <%= namePascalCase %>Validator());
 
-        private static <%= namePascalCase %>Validator _<%= name %>ValidatorInstance { get { return _lazy<%= namePascalCase %>Validator.Value; } }
+        private static <%= namePascalCase %>Validator _<%= nameCamelCase %>ValidatorInstance { get { return _lazy<%= namePascalCase %>Validator.Value; } }
 
         public static string GetValidateErrorsString(this <%= namePascalCase %> objectToValidate)
-            => objectToValidate.GetValidateErrorsString(_<%= name %>ValidatorInstance);
+            => objectToValidate.GetValidateErrorsString(_<%= nameCamelCase %>ValidatorInstance);
 
         public static void ValidateAndThrow(this <%= namePascalCase %> objectToValidate)
-            => objectToValidate.ValidateAndThrow(_<%= name %>ValidatorInstance);
+            => objectToValidate.ValidateAndThrow(_<%= nameCamelCase %>ValidatorInstance);
 
         public static ValidationResult GetValidateResult(this <%= namePascalCase %> objectToValidate)
-            => _<%= name %>ValidatorInstance.Validate(objectToValidate);
+            => _<%= nameCamelCase %>ValidatorInstance.Validate(objectToValidate);
     }
 }

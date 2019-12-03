@@ -117,7 +117,8 @@ function messageToValidation(extendedMessage) {
     const result = {
         packagePascalCase: packagePascalCase,
         namePascalCase: extendedMessage.namePascal,
-        name: extendedMessage.name
+        name: extendedMessage.name,
+        nameCamelCase: _.camelCase(extendedMessage.name)
     };
 
     result.ruleList = extendedMessage.propList
@@ -130,7 +131,8 @@ function messageToValidation(extendedMessage) {
 function prepareProtoData(data) {
     const cloneData = _.cloneDeep(data);
     
-    cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
+    if (!cloneData.hasOwnProperty("packagePascalCase"))
+        cloneData.packagePascalCase = namingHelper.casePascal(cloneData.package);
     packagePascalCase = cloneData.packagePascalCase;
 
     constructedServiceList = [];
