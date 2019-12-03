@@ -10,7 +10,7 @@ namespace Broadcast.<%= packagePascalCase %>.Validation
         {
             // Fill validation rules here
 <% ruleList.forEach(function(rule){ -%>
-            RuleFor(<%= name %> => <%= name %>.<%= rule.property %>).NotEmpty();
+            RuleFor(<%= nameCamelCase %> => <%= nameCamelCase %>.<%= rule.property %>).NotEmpty();
 <% }); -%>            
         }
 

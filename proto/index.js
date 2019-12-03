@@ -43,15 +43,23 @@ module.exports = class extends Generator {
     }
 
     async prompting() {      
-      if (!this.answers.name) {
-        this.answers = await this.prompt([
+      if (!this.answers.name || !this.answers.languages) {
+        const answers = await this.prompt([
           {
             type: "input",
             name: "name",
             message: "Microservice name",
             store: true
+          },
+          {
+            type: 'checkbox',
+            message: 'Select languages',
+            name: 'languages',
+            choices: [ "csharp", "python"],
+            store: true
           }
         ]);
+        Object.assign(this.answers, answers);
       }
     }
 

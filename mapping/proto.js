@@ -6,7 +6,7 @@ const crudNamingPattern = {
     "C": function(name, request, response) {
         return { method: "Create" + name, param: request, result: "Empty" };
     },
-    "R": function(name, request, response) {
+    "R": function(name, request, response, getByInstance) {
         return { method: "Get" + name, param: "Empty", result: response };
     },
     "U": function(name, request, response) {
@@ -17,8 +17,14 @@ const crudNamingPattern = {
     },
 };
 
-function createServiceInstance(name, operation) {
-    return { "name": name, "operation" : operation, "request": `${name}Request`, "response": `${name}Response`}
+function createServiceInstance(name, operation, getByInstance) {
+    return { 
+        "name": name, 
+        "operation" : operation, 
+        "request": `${name}Request`, 
+        "response": `${name}Response`,
+        "getByInstance": getByInstance
+    }
 }
 
 function addRelationMessage(existing) {
@@ -76,6 +82,9 @@ function processServiceStructure(structure) {
             const service = crudNamingPattern[key](structure.name, structure.request, structure.response);
             service.nameLowerCase = structure.name.toLowerCase();
             service.nameCamelCase = _.camelCase(structure.name);
+            if (service.method.startsWith("Get") && structure.getByInstance) {
+                service.param = structure.request; // getByInstance = true
+            }
             protoServiceList.push(service);
         }            
     }
@@ -88,6 +97,7 @@ function processMessageStructure(structure) {
     structure.namePascal = namingHelper.casePascal(structure.name);
     structure.propList = structure.propList.map(function(prop){
         prop.formatedName = _.snakeCase(prop.name);
+        prop.nameCamelCase = _.camelCase(prop.name);
         if (prop.isRepeated) {
             prop.type = "repeated " + prop.type;
             prop.formatedName += "_list";
@@ -98,9 +108,14 @@ function processMessageStructure(structure) {
     });    
 
     
-    if (!structure.isRequest && !structure.isResponse) { // skip
-        const operation = structure.isRelation ? "CRD" : "CRUD";
-        const constructedService = createServiceInstance(namingHelper.casePascal(structure.name), operation);
+    if (!structure.isRequest && !structure.isResponse) { // skip        
+        let operation = "";
+        if (!structure.hasOwnProperty("operation"))
+            operation = structure.isRelation ? "CRD" : "CRUD";
+        else
+            operation = structure.operation;        
+        const constructedService = createServiceInstance(namingHelper.casePascal(structure.name),
+            operation, structure.getByInstance == true);
         constructedServiceList.push(constructedService);
     }
 
