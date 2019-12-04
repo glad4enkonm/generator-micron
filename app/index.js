@@ -181,7 +181,7 @@ function build() {
 
 module.exports = class extends Generator {
     initializing() {
-      this.composeWith(require.resolve('../proto'));      
+      this.composeWith(require.resolve('../proto-inter'));      
       
       const config = this.config.getAll();
       this.answers = {...config.promptValues, proto: config.proto};
