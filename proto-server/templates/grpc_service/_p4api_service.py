@@ -33,10 +33,20 @@ def grpc_exception_wrapper(callback, method, context, return_result = False):
         context.set_details(error_str)
         context.set_code(grpc.StatusCode.UNKNOWN)
 
-class UserServicer(<%= package %>_pb2_grpc.ServiceServicer):
+class <%= packagePascalCase %>Server(<%= package %>_pb2_grpc.ServiceServicer):
     
     def __init__(self, *args, **kwargs):
         self.server_port = config['grpc']['port']
+
+<% serviceList.forEach(function(service){ -%>
+<%=`    # ${service.name} ${service.operation}`%>
+<%     service.protoServiceList.forEach(function(protoService){ -%>
+    def <%= protoService.method %>(self, request, context):
+        list = grpc_exception_wrapper(action, "<%= protoService.method %>", context, True)
+        return <%= package %>_pb2.<%= protoService.result %>(permission_list = list)
+<%     }); -%>
+
+<% }); -%>
 
     def GetPermissions(self, request, context):
         def action():
@@ -181,7 +191,7 @@ class UserServicer(<%= package %>_pb2_grpc.ServiceServicer):
 
     def start_server(self):        
         self.user_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))        
-        <%= package %>_pb2_grpc.add_ServiceServicer_to_server(UserServicer(), self.user_server)        
+        <%= package %>_pb2_grpc.add_ServiceServicer_to_server(<%= packagePascalCase %>Server(), self.user_server)        
         self.user_server.add_insecure_port('[::]:{}'.format(self.server_port))
 
         # start the server

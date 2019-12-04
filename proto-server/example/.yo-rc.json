@@ -1,8 +1,8 @@
 {
   "generator-micron": {
     "proto": {
-      "package": "project",
-      "csharpNamespace": "Broadcast.User",
+      "package": "p4api",
+      "packagePascalCase": "P4API",
       "EXAMPLE_serviceList": [
         {
           "name": "Project",
@@ -14,129 +14,110 @@
       "serviceList": [],
       "messageList": [
         {
-          "name": "project",
+          "name": "user",
           "propList": [
             {
-              "name": "project id",
+              "name": "user id",
+              "type": "int32"
+            },
+            {
+              "name": "login",
+              "type": "string",
+              "notNull": true,
+              "unique": true
+            },
+            {
+              "name": "email",
+              "notNull": true,
+              "type": "string"
+            },
+            {
+              "name": "full name",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "password",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "propList": [
+            {
+              "name": "group id",
               "type": "int32"
             },
             {
               "name": "name",
               "type": "string",
-              "notNull": true,
-              "unique": true
-            },
-            {
-              "name": "tag",
-              "type": "string"
-            },
-            {
-              "name": "created by",
-              "type": "string",
               "notNull": true
-            },
-            {
-              "name": "group",
-              "type": "string"
-            },
-            {
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "name": "path",
-              "type": "string",
-              "notNull": true,
-              "unique": true
             },
             {
               "name": "owner",
-              "type": "string",
-              "notNull": true
+              "type": "string"
             }
           ],
           "relationList": [
-            "configuration"
+            "user"
           ]
         },
         {
-          "name": "configuration",
+          "name": "text file",
+          "getByInstance": true,
           "propList": [
             {
-              "name": "configuration id",
+              "name": "full path",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "version",
               "type": "int32"
             },
             {
+              "name": "content",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "permission",
+          "propList": [
+            {
+              "name": "permission id",
+              "type": "int32"
+            },
+            {
+              "name": "access level",
+              "type": "string",
+              "notNull": true
+            },
+            {
+              "name": "user group",
+              "type": "string"
+            },
+            {
               "name": "name",
-              "type": "string",
-              "notNull": true
-            },
-            {
-              "name": "tag",
-              "type": "string"
-            },
-            {
-              "name": "created by",
-              "type": "string",
-              "notNull": true
-            },
-            {
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "name": "path",
               "type": "string",
               "notNull": true,
               "unique": true
             },
             {
-              "name": "json",
-              "type": "string",
-              "notNull": true
-            }
-          ],
-          "relationList": [
-            "component"
-          ]
-        },
-        {
-          "name": "component",
-          "propList": [
-            {
-              "name": "component id",
-              "type": "int32"
-            },
-            {
-              "name": "name",
-              "type": "string",
-              "notNull": true
-            },
-            {
-              "name": "tag",
+              "name": "host",
               "type": "string"
-            },
-            {
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "name": "path",
-              "type": "string",
-              "notNull": true,
-              "unique": true
-            },
-            {
-              "name": "json",
-              "type": "string",
-              "notNull": true
             }
           ]
         }
       ]
     },
     "promptValues": {
-      "name": "Project"
+      "name": "P4API",
+      "outputRenderData": true,
+      "languages": [
+        "python"
+      ]
     }
   }
 }

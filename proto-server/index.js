@@ -26,6 +26,12 @@ module.exports = class extends Generator {
                     name: 'languages',
                     choices: ["csharp", "python"],
                     store: true
+                },
+                {
+                    type: 'confirm',
+                    message: 'Output render data',
+                    name: 'outputRenderData',                    
+                    store: true
                 }
             ]);
             Object.assign(this.answers, answers);
@@ -33,34 +39,18 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        const dataToRender = proto.prepareData(that.answers.proto);
-        cache.protoDataToRender = dataToRender;
+        const dataToRender = proto.prepareData(this.answers.proto);
+        if (this.answers.outputRenderData) {
+            this.fs.writeJSON('dataToRender.json', dataToRender);
+        }        
 
+        /*
         that.fs.copyTpl(
             that.templatePath("_.proto"),
             that.destinationPath(`${dataToRender.package}.proto`),
             dataToRender
         );
-
-        that.fs.copyTpl(
-            that.templatePath("CSharp/_Broadcast.csproj"),
-            that.destinationPath(`CSharp/Broadcast.${dataToRender.packagePascalCase}.csproj`),
-            dataToRender
-        );
-
-        that.fs.copyTpl(
-            that.templatePath("CSharp/Validation/_CommonValidator.cs"),
-            that.destinationPath("CSharp/Validation/CommonValidator.cs"),
-            dataToRender
-        );
-
-        dataToRender.validatorList.map(validator => {
-            that.fs.copyTpl(
-                that.templatePath("CSharp/Validation/_CustomValidator.cs"),
-                that.destinationPath(`CSharp/Validation/${validator.namePascalCase}Validator.cs`),
-                validator
-            );
-        });
+        */
     }
 
     install() {
