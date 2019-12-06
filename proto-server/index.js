@@ -44,13 +44,17 @@ module.exports = class extends Generator {
             this.fs.writeJSON('dataToRender.json', dataToRender);
         }        
 
-        /*
-        that.fs.copyTpl(
-            that.templatePath("_.proto"),
-            that.destinationPath(`${dataToRender.package}.proto`),
+        this.fs.copyTpl(
+            this.templatePath("grpc_service/_service_logic.py"),
+            this.destinationPath(`grpc_service/${dataToRender.package}_service_logic.py`),
             dataToRender
         );
-        */
+
+        this.fs.copyTpl(
+            this.templatePath("grpc_service/_service.py"),
+            this.destinationPath(`grpc_service/${dataToRender.package}_service.py`),
+            dataToRender
+        );
     }
 
     install() {

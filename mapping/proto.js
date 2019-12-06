@@ -80,8 +80,10 @@ function processServiceStructure(structure) {
     for (key in crudNamingPattern) {
         if (structure.operation.includes(key)) {
             const service = crudNamingPattern[key](structure.name, structure.request, structure.response);
+            service.nameSnakeCase = _.snakeCase(structure.name);
             service.nameLowerCase = structure.name.toLowerCase();
             service.nameCamelCase = _.camelCase(structure.name);
+            service.methodSnakeCase = _.snakeCase(service.method);
             if (service.method.startsWith("Get") && structure.getByInstance) {
                 service.param = structure.request; // getByInstance = true
             }
