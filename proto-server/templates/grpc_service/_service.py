@@ -37,8 +37,8 @@ class <%= packagePascalCase %>Server(<%= package %>_pb2_grpc.ServiceServicer):
 <% serviceList.forEach(function(service){ -%>
 <%=`    # ${service.name} ${service.operation}`%>
 <%     service.protoServiceList.forEach(function(protoService){ -%>
-    def <%= protoService.methodSnakeCase %>(self, request, context):
-<%         if (protoService.method.startsWith("Get")) { -%>        
+    def <%= protoService.method %>(self, request, context):
+<%         if (protoService.method.startsWith("Get")) { -%>
         list = grpc_exception_wrapper(logic.<%= protoService.methodSnakeCase %>, "<%= protoService.methodSnakeCase %>", context, True)
         return <%= package %>_pb2.<%= protoService.result %>(<%= protoService.nameSnakeCase %>_list = list)
 <%         } else { -%>
