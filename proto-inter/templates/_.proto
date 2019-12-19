@@ -33,3 +33,7 @@ message <%= message.namePascal %> {
 <% }); -%>
 
 message Empty {}
+
+message Integer {
+    int32 value = 1;
+}

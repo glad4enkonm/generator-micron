@@ -4,7 +4,7 @@ let constructedServiceList = null, allRelationList = null, packagePascalCase = n
 
 const crudNamingPattern = {
     "C": function(name, request, response) {
-        return { method: "Create" + name, param: request, result: "Empty" };
+        return { method: "Create" + name, param: request, result: "Integer" };
     },
     "R": function(name, request, response, getByInstance) {
         return { method: "Get" + name, param: "Empty", result: response };
