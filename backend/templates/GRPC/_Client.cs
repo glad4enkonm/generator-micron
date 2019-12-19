@@ -38,7 +38,7 @@ namespace Backend.GRPC
             return response.<%= service.name %>List;
         }
 <%     } else if (protoService.method.startsWith("Create")) { -%>
-        public async Task<Integer> Create<%= service.name %>Async(<%= service.name %> instance) =>
+        public async Task Create<%= service.name %>Async(<%= service.name %> instance) =>
             await Client.Create<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
 <%     } else if (protoService.method.startsWith("Update")) { -%>
         public async Task Update<%= service.name %>Async(<%= service.name %> instance) =>
