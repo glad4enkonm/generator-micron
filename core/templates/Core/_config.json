@@ -1,0 +1,15 @@
+{
+    "Database": {
+      "Server": "$<%= packageUpperCase %>_DB_SERVER",
+      "Database": "$<%= packageUpperCase %>_DB_NAME",
+      "User": "$<%= packageUpperCase %>_DB_USER",
+      "Password": "$<%= packageUpperCase %>_DB_PASSWORD"
+    }, 
+    "GRPC": {
+      "INSERT OTHER gRPC CLIENT ADDRESS HERE": {},
+      "<%= packagePascalCase %>": {
+        "HostName": "$<%= packageUpperCase %>_GRPC_SERVER",
+        "Port": $<%= packageUpperCase %>_GRPC_SERVER_PORT
+      }
+    }  
+  }

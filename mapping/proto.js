@@ -3,8 +3,8 @@ const namingHelper = require('../helper/naming');
 let constructedServiceList = null, allRelationList = null, packagePascalCase = null;
 
 const crudNamingPattern = {
-    "C": function(name, request, response) {
-        return { method: "Create" + name, param: request, result: "Integer" };
+    "C": function(name, request, response, isRelation = false) {
+        return { method: "Create" + name, param: request, result: isRelation ? "Empty" : "Integer" };
     },
     "R": function(name, request, response, getByInstance) {
         return { method: "Get" + name, param: "Empty", result: response };
@@ -80,7 +80,8 @@ function processServiceStructure(structure) {
     protoServiceList = [];
     for (key in crudNamingPattern) {
         if (structure.operation.includes(key)) {
-            const service = crudNamingPattern[key](structure.name, structure.request, structure.response);
+            const service = crudNamingPattern[key](structure.name, structure.request, 
+                structure.response, structure.isRelation);
             service.nameSnakeCase = _.snakeCase(structure.name);
             service.nameLowerCase = structure.name.toLowerCase();
             service.nameCamelCase = _.camelCase(structure.name);
