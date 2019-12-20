@@ -13,24 +13,24 @@ function copyClientFiles(that) {
       cache.protoDataToRender = proto.prepareData(that.answers.proto);
   
     const dataToRender = backend.prepareData(that.answers.proto, cache);
-    that.fs.copy(that.templatePath("Helper/_EndpointHelper.cs"), that.destinationPath("Helper/EndpointHelper.cs"));
+    copyWithAFilter(that.templatePath("Helper/_EndpointHelper.cs"), that.destinationPath("Helper/EndpointHelper.cs"));
   
-    that.fs.copyTpl(that.templatePath("Controller/_Controller.cs"),
+    copyTplWithAFilter(that.templatePath("Controller/_Controller.cs"),
       that.destinationPath(`Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);  
-    that.fs.copyTpl(that.templatePath("GRPC/Interface/_IClient.cs"),
+    copyTplWithAFilter(that.templatePath("GRPC/Interface/_IClient.cs"),
       that.destinationPath(`GRPC/Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
-    that.fs.copyTpl(that.templatePath("GRPC/_Client.cs"),
+    copyTplWithAFilter(that.templatePath("GRPC/_Client.cs"),
       that.destinationPath(`GRPC/${dataToRender.packagePascalCase}Client.cs`), dataToRender);
 }
 
 function copyTplWithAFilter(source, destination, data) {  
-  if (source.startsWith(this.templatePath(this.answers.filter)))
-    this.fs.copyTplOriginal(source, destination, data);
+  if (this.answers.filter && source.startsWith(this.templatePath(this.answers.filter)))
+    this.fs.copyTpl(source, destination, data);
 }
 
 function copyWithAFilter(source, destination) {
-  if (source.startsWith(this.templatePath(this.answers.filter)))
-    this.fs.copyOriginal(source, destination);
+  if (this.answers.filter && source.startsWith(this.templatePath(this.answers.filter)))
+    this.fs.copy(source, destination);
 }
 
 module.exports = class extends Generator {
@@ -38,13 +38,9 @@ module.exports = class extends Generator {
       const config = this.config.getAll();
       this.answers = {...config.promptValues, proto: config.proto};
       this.answers.filter = this.options.filter;
-      if (this.answers.filter) {
-        this.fs.copyTplOriginal = this.fs.copyTpl;
-        this.fs.copyTpl = copyTplWithAFilter.bind(this);
-        this.fs.copyOriginal = this.fs.copy;
-        this.fs.copy = copyWithAFilter.bind(this);
-      }
-        
+
+      copyTplWithAFilter = copyTplWithAFilter.bind(this);
+      copyWithAFilter = copyTplWithAFilter.bind(this);
     } 
 
 
@@ -65,5 +61,10 @@ module.exports = class extends Generator {
 
     writing() {
         copyClientFiles(this);
+
+        const dataToRender = proto.prepareData(this.answers.proto);
+        if (this.answers.outputRenderData) {
+            this.fs.writeJSON('dataToRender.json', dataToRender);
+        }
     }
 }

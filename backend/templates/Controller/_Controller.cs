@@ -1,8 +1,6 @@
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Backend.GRPC.Interface;
@@ -36,17 +34,27 @@ namespace Backend.Controller
         {
             return await ExecuteLoagAndReturnStatusAsync(async () => await _<%= package %>Client.Get<%= service.name %>Async(), _logger, "Get<%= service.name %>Async", this);
         }
-<%     } else if (protoService.method.startsWith("Create")) { -%>
+<%     } else if (protoService.method.startsWith("Create") && !service.isRelation) { -%>
+        [HttpPost("<%= service.name %>")]
+        public async Task<ActionResult<Integer>> Create<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
+        {
+            async Task<Integer> action()
+            {
+                <%= protoService.nameCamelCase %>.ValidateAndThrow();
+                return await _<%= package %>Client.Create<%= service.name %>Async(<%= protoService.nameCamelCase %>);
+            }
+            return await ExecuteLoagAndReturnStatusAsync(action, _logger, "Add<%= service.name %>Async", this);
+        }
+<%     } else if (protoService.method.startsWith("Create") && service.isRelation) { -%>
         [HttpPost("<%= service.name %>")]
         public async Task<ActionResult> Create<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
         {
             async Task action()
-            {
-                <%= protoService.nameCamelCase %>.ValidateAndThrow();
+            {                
                 await _<%= package %>Client.Create<%= service.name %>Async(<%= protoService.nameCamelCase %>);
             }
             return await ExecuteLoagAndReturnStatusAsync(action, _logger, "Add<%= service.name %>Async", this);
-        }
+        }        
 <%     } else if (protoService.method.startsWith("Update")) { -%>
         [HttpPut("<%= service.name %>")]
         public async Task<ActionResult> Update<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)

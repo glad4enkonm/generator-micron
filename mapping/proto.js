@@ -17,13 +17,14 @@ const crudNamingPattern = {
     },
 };
 
-function createServiceInstance(name, operation, getByInstance) {
+function createServiceInstance(name, operation, getByInstance, isRelation = false) {
     return { 
         "name": name, 
         "operation" : operation, 
         "request": `${name}Request`, 
         "response": `${name}Response`,
-        "getByInstance": getByInstance
+        "getByInstance": getByInstance,
+        "isRelation": isRelation
     }
 }
 
@@ -117,7 +118,7 @@ function processMessageStructure(structure) {
         else
             operation = structure.operation;        
         const constructedService = createServiceInstance(namingHelper.casePascal(structure.name),
-            operation, structure.getByInstance == true);
+            operation, structure.getByInstance == true, structure.isRelation);
         constructedServiceList.push(constructedService);
     }
 
