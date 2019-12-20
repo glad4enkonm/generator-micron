@@ -6,31 +6,25 @@ const proto = require('../mapping/proto');
 const backend = require('../mapping/backend');
 const pkg = require('../package.json');
 
+const filterHelper = require('../helper/filter');      
+
 let cache = {};
 
-function copyClientFiles(that) {
+function copyClientFiles() {
     if (!cache.protoDataToRender) // fill cache
-      cache.protoDataToRender = proto.prepareData(that.answers.proto);
+      cache.protoDataToRender = proto.prepareData(this.answers.proto);
   
-    const dataToRender = backend.prepareData(that.answers.proto, cache);
-    copyWithAFilter(that.templatePath("Helper/_EndpointHelper.cs"), that.destinationPath("Helper/EndpointHelper.cs"));
+    const dataToRender = backend.prepareData(this.answers.proto, cache);
+    this.copyWithAFilter(this.templatePath("Helper/_EndpointHelper.cs"), this.destinationPath("Helper/EndpointHelper.cs"));
   
-    copyTplWithAFilter(that.templatePath("Controller/_Controller.cs"),
-      that.destinationPath(`Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);  
-    copyTplWithAFilter(that.templatePath("GRPC/Interface/_IClient.cs"),
-      that.destinationPath(`GRPC/Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
-    copyTplWithAFilter(that.templatePath("GRPC/_Client.cs"),
-      that.destinationPath(`GRPC/${dataToRender.packagePascalCase}Client.cs`), dataToRender);
-}
+    this.copyTplWithAFilter(this.templatePath("Controller/_Controller.cs"),
+      this.destinationPath(`Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);
 
-function copyTplWithAFilter(source, destination, data) {  
-  if (this.answers.filter && source.startsWith(this.templatePath(this.answers.filter)))
-    this.fs.copyTpl(source, destination, data);
-}
-
-function copyWithAFilter(source, destination) {
-  if (this.answers.filter && source.startsWith(this.templatePath(this.answers.filter)))
-    this.fs.copy(source, destination);
+    this.copyTplWithAFilter(this.templatePath("GRPC/Interface/_IClient.cs"),
+      this.destinationPath(`GRPC/Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
+      
+    this.copyTplWithAFilter(this.templatePath("GRPC/_Client.cs"),
+      this.destinationPath(`GRPC/${dataToRender.packagePascalCase}Client.cs`), dataToRender);
 }
 
 module.exports = class extends Generator {
@@ -39,8 +33,11 @@ module.exports = class extends Generator {
       this.answers = {...config.promptValues, proto: config.proto};
       this.answers.filter = this.options.filter;
 
-      copyTplWithAFilter = copyTplWithAFilter.bind(this);
-      copyWithAFilter = copyTplWithAFilter.bind(this);
+      this.log(filterHelper);
+
+      this.copyTplWithAFilter = filterHelper.copyTplWithAFilter.bind(this);
+      this.copyWithAFilter = filterHelper.copyTplWithAFilter.bind(this);
+      this.copyClientFiles = copyClientFiles.bind(this);
     } 
 
 
@@ -60,7 +57,7 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        copyClientFiles(this);
+        this.copyClientFiles();
 
         const dataToRender = proto.prepareData(this.answers.proto);
         if (this.answers.outputRenderData) {
