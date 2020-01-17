@@ -1,5 +1,5 @@
-using Backend.GRPC.Interface;
-using Backend.Helper;
+using <%= rootNamespace %>.GRPC.Interface;
+using <%= rootNamespace %>.Helper;
 using Broadcast.<%= packagePascalCase %>;
 
 using Grpc.Core;
@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static Backend.Helper.GrpcHelper;
+using static <%= rootNamespace %>.Helper.GrpcHelper;
 
 
 
-namespace Backend.GRPC
+namespace <%= rootNamespace %>.GRPC
 {
     public class <%= packagePascalCase %>Client: I<%= packagePascalCase %>Client
     {
@@ -31,14 +31,24 @@ namespace Backend.GRPC
 <% serviceList.forEach(function(service){ -%>
 #region <%= service.name + service.operation %>
 <%   service.protoServiceList.forEach(function(protoService){ -%>
-<%     if (protoService.method.startsWith("Get")) { -%>
+<%     if (protoService.method.startsWith("Get") && !service.getByInstance) { -%>
         public async Task<IEnumerable<<%= service.name %>>> Get<%= service.name %>Async()
         {
             <%= service.name %>Response response = await Client.Get<%= service.name %>Async(new Empty());
             return response.<%= service.name %>List;
         }
+<%     } else if (protoService.method.startsWith("Get") && service.getByInstance) { -%>
+        public async Task<IEnumerable<<%= service.name %>>> Get<%= service.name %>Async(<%= service.name %> instance)
+        {
+            <%= service.name %>Response response = await Client.Get<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
+            return response.<%= service.name %>List;
+        }
 <%     } else if (protoService.method.startsWith("Create")) { -%>
+<%       if (returnIntegerId) { -%>
         public async Task<Integer> Create<%= service.name %>Async(<%= service.name %> instance) =>
+<%       } else { -%>
+        public async Task Create<%= service.name %>Async(<%= service.name %> instance) =>
+<%       } -%>
             await Client.Create<%= service.name %>Async(new <%= service.name %>Request { <%= service.name %> = instance });
 <%     } else if (protoService.method.startsWith("Update")) { -%>
         public async Task Update<%= service.name %>Async(<%= service.name %> instance) =>

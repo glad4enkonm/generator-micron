@@ -17,6 +17,10 @@ function copyClientFiles(that) {
       that.destinationPath(`Interface/I${dataToRender.packagePascalCase}Client.cs`), dataToRender);
     that.fs.copyTpl(that.templatePath("_Client.cs"),
       that.destinationPath(`${dataToRender.packagePascalCase}Client.cs`), dataToRender);
+
+    if (that.answers.outputRenderData) {
+      that.fs.writeJSON('dataToRender.json', dataToRender);
+    }
   }
 
   module.exports = class extends Generator {
@@ -35,6 +39,12 @@ function copyClientFiles(that) {
             name: "name",
             message: "Microservice name",
             store: true
+          },
+          {
+              type: 'confirm',
+              message: 'Output render data',
+              name: 'outputRenderData',                    
+              store: true
           } 
         ]);
       }
