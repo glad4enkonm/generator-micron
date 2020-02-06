@@ -62,7 +62,7 @@ namespace Core.Business
                     var listTransport = _mapper.Map<IEnumerable<<%= service.name%>>>(<%= protoService.nameCamelCase%>List);
                     return listTransport.Construct<<%= protoService.result %>, <%= service.name%>>(resp => resp.<%= service.name%>List);
                 }
-                return ExecuteCatchLoagAndRethrowException(function, _logger, "<%= protoService.method %>");
+                return ExecuteCatchLogAndRethrowException(function, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Create")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
             {                
@@ -71,7 +71,7 @@ namespace Core.Business
                     var model = _mapper.Map<Model.<%= service.name %>>(request.<%= service.name %>);
                     _<%= protoService.nameCamelCase%>Repository.Insert(model);
                 }
-                ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
+                ExecuteCatchLogAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Update")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
             {                
@@ -84,7 +84,7 @@ namespace Core.Business
                         throw new ArgumentException($"Update<%= service.name %>: <%= service.name %> with id = {model.<%= service.name %>Id} not found.");
                     _<%= protoService.nameCamelCase%>Repository.Update(model);
                 }
-                ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
+                ExecuteCatchLogAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
             public void <%= protoService.method %>(<%= protoService.param %> request)
             {
@@ -94,7 +94,7 @@ namespace Core.Business
                         .Get(request.<%= service.name %>.<%= service.name %>Id);
                     _<%= protoService.nameCamelCase%>Repository.Delete(modelToDelete);
                 };
-                ExecuteCatchLoagAndRethrowException(action, _logger, "<%= protoService.method %>");
+                ExecuteCatchLogAndRethrowException(action, _logger, "<%= protoService.method %>");
 <%     } -%>                
             }
 <%   }); -%>

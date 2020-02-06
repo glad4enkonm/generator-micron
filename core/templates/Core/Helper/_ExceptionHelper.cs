@@ -6,7 +6,7 @@ namespace Core.Helper
 {
     public static class ExceptionHelper
     {
-        public static void ExecuteCatchLoagAndRethrowException(Action action, ILogger logger, string message)
+        public static void ExecuteCatchLogAndRethrowException(Action action, ILogger logger, string message)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Core.Helper
             }
         }
 
-        public static T ExecuteCatchLoagAndRethrowException<T>(Func<T> function, ILogger logger, string message)
+        public static T ExecuteCatchLogAndRethrowException<T>(Func<T> function, ILogger logger, string message)
         {
             try
             {
