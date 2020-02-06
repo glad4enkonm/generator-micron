@@ -2,3 +2,6 @@
 Type=simple
 WorkingDirectory=/opt/dive/<%= package %>/
 ExecStart=/opt/dive/<%= package %>/start.sh
+
+[Install]
+WantedBy=multi-user.target
