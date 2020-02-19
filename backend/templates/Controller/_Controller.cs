@@ -7,8 +7,6 @@ using Backend.GRPC.Interface;
 using Broadcast.<%= packagePascalCase %>;
 using Broadcast.<%= packagePascalCase %>.Validation;
 
-using static Backend.Helper.EndpointHelper;
-
 namespace Backend.Controller
 {
     [Route("api/[controller]")]
@@ -56,6 +54,7 @@ namespace Backend.Controller
 
 <%   }); -%>
 #endregion
+
 <% }); -%>
     }
 
