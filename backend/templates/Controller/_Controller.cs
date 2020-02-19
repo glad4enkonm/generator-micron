@@ -50,7 +50,7 @@ namespace Backend.Controller
         }
 <%     } else if (protoService.method.startsWith("Delete")) { -%>
         [HttpDelete("<%= service.name %>")]
-        public async Task<ActionResult> Delete<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
+        public async Task Delete<%= service.name %>Async(<%= service.name %> <%= protoService.nameCamelCase %>)
             => await _<%= package %>Client.Delete<%= service.name %>Async(<%= protoService.nameCamelCase %>);
 <%     } -%>
 
