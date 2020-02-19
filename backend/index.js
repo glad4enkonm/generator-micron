@@ -15,7 +15,7 @@ function copyClientFiles() {
       cache.protoDataToRender = proto.prepareData(this.answers.proto);
   
     const dataToRender = backend.prepareData(this.answers.proto, cache);
-    this.copyWithAFilter(this.templatePath("Helper/_EndpointHelper.cs"), this.destinationPath("Helper/EndpointHelper.cs"));
+    this.copyWithAFilter(this.templatePath("Middleware/_ExceptionMiddleware.cs"), this.destinationPath("Middleware/ExceptionMiddleware.cs"));
   
     this.copyTplWithAFilter(this.templatePath("Controller/_Controller.cs"),
       this.destinationPath(`Controller/${dataToRender.packagePascalCase}Controller.cs`), dataToRender);
