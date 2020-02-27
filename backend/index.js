@@ -10,7 +10,7 @@ const filterHelper = require('../helper/filter');
 
 let cache = {};
 
-function copyClientFiles() {
+function copyFiles() {
     if (!cache.protoDataToRender) // fill cache
       cache.protoDataToRender = proto.prepareData(this.answers.proto);
   
@@ -37,14 +37,13 @@ module.exports = class extends Generator {
 
       this.copyTplWithAFilter = filterHelper.copyTplWithAFilter.bind(this);
       this.copyWithAFilter = filterHelper.copyTplWithAFilter.bind(this);
-      this.copyClientFiles = copyClientFiles.bind(this);
+      this.copyFiles = copyFiles.bind(this);
     } 
 
 
-    async prompting() {
-      this.log(yosay('Welcome to the Yeoman ' + chalk.green('micron') + ' (' + pkg.version + ')' + ' generator!'));
-      
+    async prompting() {      
       if (!this.answers.name) {
+        this.log(yosay('Welcome to the Yeoman ' + chalk.green('micron') + ' (' + pkg.version + ')' + ' generator!'));
         this.answers = await this.prompt([
           {
             type: "input",
@@ -57,11 +56,19 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        this.copyClientFiles();
+        if (this.options.calledFromApp) { // save dest path and update it
+          this.answers.root = this.destinationRoot();
+          this.destinationRoot("Backend")
+        }
+        
+        this.copyFiles();
 
         const dataToRender = proto.prepareData(this.answers.proto);
         if (this.answers.outputRenderData) {
             this.fs.writeJSON('dataToRender.json', dataToRender);
         }
-    }
+
+        if (this.options.calledFromApp) // reset dest path
+          this.destinationRoot(this.answers.root);
+    }    
 }

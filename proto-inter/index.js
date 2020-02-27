@@ -64,7 +64,13 @@ module.exports = class extends Generator {
     }
 
     writing() {
+      if (this.options.calledFromApp) { // save dest path and update it
+        this.answers.root = this.destinationRoot();
+        this.destinationRoot("proto")
+      }
       copyProtoFiles(this);
+      if (this.options.calledFromApp) // reset dest path
+        this.destinationRoot(this.answers.root);
     }
 
     install() {
