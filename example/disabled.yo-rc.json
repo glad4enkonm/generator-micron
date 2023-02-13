@@ -1,0 +1,16 @@
+{
+  "generator-micron": {
+    "entity": {
+      "name": "OperatorCurrencyExchangeRate",
+      "props": [
+        { "name": "ExchangeRate", "type": "decimal(10,4)", "unique": false, "default": "", "null": false  }
+      ],
+      "init": [],
+      "relations": [
+        {"prop": "", "table": "User"},
+        {"prop": "CurrencyFromId", "table": "Currency"},
+        {"prop": "CurrencyToId", "table": "Currency"}
+      ]
+    }
+  }
+}
