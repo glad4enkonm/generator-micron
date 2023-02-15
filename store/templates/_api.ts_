@@ -1,0 +1,56 @@
+import api from "@/api";
+<% entities.forEach(function(entity){ -%>
+import type { I<%- entity.name %> } from "@/model/<%- entity.camelName %>";
+<% }) -%>
+
+class <%- name %>ApiService {
+  static getInstance(): <%- name %>ApiService {
+    return this.instance || (this.instance = new this())
+  }
+
+  private static instance: <%- name %>ApiService
+
+  private baseUrl = '/<%- nameCamelCase %>'
+
+  private constructor() {
+    // empty for linter
+  }
+
+<% entities.forEach(function(entity){ -%>
+  // Операции для <%- entity.name %> -------------------------------
+<%   if (entity.controller.operations.includes("R")) { -%>
+  // Запросить данные
+  get<%- entity.name %>(id: number) {
+      return api.get<I<%- entity.name %>>(this.baseUrl + '/<%- entity.camelName %>' + '/' + id)
+  }
+
+  get<%- entity.name %>List() {
+      return api.get<I<%- entity.name %>[]>(this.baseUrl + '/<%- entity.camelName %>' + '/list')
+  }
+
+<%   } -%>
+<%   if (entity.controller.operations.includes("C")) { -%>
+  // Создать данные
+  create<%- entity.name %>(payload: I<%- entity.name %>) {
+      return api.post<I<%- entity.name %>>(this.baseUrl + '/<%- entity.camelName %>', payload)
+  }
+
+<%   } -%>
+<%   if (entity.controller.operations.includes("U")) { -%>
+  // Обновить данные
+  update<%- entity.name %>(payload: any) {
+      return api.patch<I<%- entity.name %>>(this.baseUrl + '/<%- entity.camelName %>', payload)
+  }
+
+<%   } -%>
+<%   if (entity.controller.operations.includes("D")) { -%>
+  // Удалить данные
+  delete<%- entity.name %>(id: number) {
+      return api.delete(this.baseUrl + '/<%- entity.camelName %>' + '/' + id)
+  }
+
+<%   } -%>
+<% }) -%>
+}
+
+export default <%- name %>ApiService.getInstance()

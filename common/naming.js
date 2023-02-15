@@ -8,7 +8,10 @@ const pad = (num, size) => {
     return num
 }
 
+const firstLetterToLowerCase = str => str.charAt(0).toLowerCase() + str.slice(1)
+
 module.exports = {
     casePascal,
-    pad
+    pad,
+    firstLetterToLowerCase
 }

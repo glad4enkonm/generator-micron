@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const {casePascal} = require("./naming");
 
 const mapping = {
     "bigint unsigned": "ulong",
