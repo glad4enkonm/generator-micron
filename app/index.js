@@ -6,6 +6,8 @@ module.exports = class extends Generator {
     initializing() {
         this.composeWith(require.resolve('../migrations'), [], {calledFromApp: true})
         this.composeWith(require.resolve('../repository'), [], {calledFromApp: true})
+        this.composeWith(require.resolve('../controller'), [], {calledFromApp: true})
+        this.composeWith(require.resolve('../store'), [], {calledFromApp: true})
 
         const config = this.config.getAll()
         this.answers = {...config.promptValues, entity: config.entity}

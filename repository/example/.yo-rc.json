@@ -1,15 +1,14 @@
 {
   "generator-micron": {
-    "entity": {
+    "entities": [{
       "name": "OperatorCurrencyExchangeRate",
       "generation": {
         "migrations": true,
         "repository": true,
-        "controller": "Test",
-        "store": true
+        "controller": false,
+        "store": false
       },
       "controller": {
-        "name": "Currency",
         "operations": "CRUD"
       },
       "props": [
@@ -21,6 +20,27 @@
         {"prop": "CurrencyFromId", "table": "Currency"},
         {"prop": "CurrencyToId", "table": "Currency"}
       ]
-    }
+    }, {
+      "name": "Currency",
+      "generation": {
+        "migrations": true,
+        "repository": true,
+        "controller": "Test",
+        "store": true
+      },
+      "controller": {
+        "operations": "CRUD"
+      },
+      "props": [
+        { "name": "Name", "type": "varchar(10)", "unique": true }
+      ],
+      "init": [
+        {"name":  "RUB"},
+        {"name":  "CNY"},
+        {"name":  "USD"},
+        {"name":  "EUR"}
+      ],
+      "relations": []
+    }]
   }
 }
