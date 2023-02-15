@@ -1,12 +1,35 @@
 {
   "generator-micron": {
     "entities": [{
+      "name": "UserRole",
+      "generation": {
+        "migrations": true,
+        "repository": true,
+        "controller": false,
+        "store": false,
+        "isHistoryEnabled": false
+      },
+      "controller": {
+        "operations": "CRUD"
+      },
+      "props": [
+        { "name": "Name", "type": "varchar(500)", "unique": true, "default": "", "null": false  },
+        { "name": "Description", "type": "varchar(1000)", "unique": false, "default": "NULL", "null": true  }
+      ],
+      "init": [
+        {"name":  "Customer", "description":  "Обычный покупатель"},
+        {"name":  "Operator", "description":  "Выкупает товар для покупателя"},
+        {"name":  "Administrator", "description":  "Управляет настройками"}
+      ],
+      "relations": []
+    },{
       "name": "OperatorCurrencyExchangeRate",
       "generation": {
         "migrations": true,
         "repository": true,
         "controller": "Test",
-        "store": true
+        "store": false,
+        "isHistoryEnabled": true
       },
       "controller": {
         "operations": "CRUD"
@@ -23,10 +46,11 @@
     }, {
       "name": "Currency",
       "generation": {
-        "migrations": true,
-        "repository": true,
-        "controller": "Test",
-        "store": true
+        "migrations": false,
+        "repository": false,
+        "controller": false,
+        "store": false,
+        "isHistoryEnabled": false
       },
       "controller": {
         "operations": "CRUD"

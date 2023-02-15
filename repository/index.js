@@ -1,9 +1,10 @@
 const Generator = require("yeoman-generator")
 const sql = require("../common/sql")
 const repository = require("../common/repository")
+const {appendHistoryEntities} = require("../common/history");
 
 function copyFiles(that) {
-
+    appendHistoryEntities(that)
     that.answers.entities.map(entity => {
         if (entity.hasOwnProperty("generation") && entity.generation.repository == false)
             return // пропускаем если у элемента есть указание не создавать репозиторий

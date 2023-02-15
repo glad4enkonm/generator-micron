@@ -2,12 +2,14 @@ const Generator = require("yeoman-generator")
 const sql = require("../common/sql")
 const fs = require('fs')
 const {pad} = require("../common/naming");
+const {appendHistoryEntities} = require("../common/history");
 
 function copyDbFiles(that) {
     const migrationsSubdir = that.options.calledFromApp ? 'database/Migrations/' : 'Migrations/'
     const files = fs.readdirSync(process.cwd() + '/' + migrationsSubdir)
     files.sort().reverse()
     const newMigrationNumber = files.length > 0 ? Number(files[0].split('_')[0]) + 1 : 0
+    appendHistoryEntities(that)
 
     that.answers.entities.map(entity => {
         if (entity.hasOwnProperty("generation") && entity.generation.migrations == false)
