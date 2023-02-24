@@ -48,7 +48,6 @@ function prepare_sql_data(entity) {
 
     // Проходим по всем свойствам
     for (let [index, prop] of entityCopy.props.entries()) {
-        console.log(JSON.stringify(prop))
         prop.name =  casePascal(prop.name)
         if (prop.hasOwnProperty("id") && prop["id"]) // options заполнены для id уже
             continue;

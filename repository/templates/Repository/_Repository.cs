@@ -1,3 +1,4 @@
+using database.Repository.Base;
 <%    if (!name.endsWith("History") && !generation.isHistoryEnabled) { -%>
 using database.Models;
 
@@ -12,7 +13,6 @@ public class <%- name %>Repository : DataRepositoryBase<<%- name %>>, I<%- name 
 }
 <%    } else if (name.endsWith("History")) { -%>
 using database.Models.History;
-using database.Repository.Base;
 
 namespace database.Repository.History;
 
@@ -25,9 +25,8 @@ public class <%- name %>Repository : DataRepositoryBase<<%- name %>>, I<%- name 
 }
 <%    } else if (generation.isHistoryEnabled) { -%>
 using database.Models.History;
-using database.Repository.Base;
 
-namespace database.Repository;
+namespace database.Repository.History;
 
 public interface I<%- name %>Repository : IDataRepositoryWithHistory<<%- name %>>
 {

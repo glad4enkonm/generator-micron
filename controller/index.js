@@ -14,7 +14,6 @@ function copyFiles(that) {
     usedControllerNames.map(controllerName => {
         const entitiesForController = preparedEntities
             .filter(entity => entity.generation.controller == controllerName)
-        console.log(entitiesForController)
 
         const controllersDir = that.options.calledFromApp ? 'backend/Controllers/' : 'Controllers/'
         that.fs.copyTpl(

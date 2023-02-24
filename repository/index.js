@@ -10,12 +10,10 @@ function copyFiles(that) {
             return // пропускаем если у элемента есть указание не создавать репозиторий
 
         const dataToRender = repository.prepareData(sql.prepareData(entity))
-        console.log("-------")
-        console.log(entity)
 
         let modelsDir = that.options.calledFromApp ? 'database/Models/' : 'Models/'
         let repositoryDir = that.options.calledFromApp ? 'database/Repository/' : 'Repository/'
-        if (entity.generation.isHistoryEnabled == true) {
+        if (entity.generation.isHistoryEnabled == true || entity.name.endsWith("History")) {
             modelsDir += "History/"
             repositoryDir += "History/"
         }

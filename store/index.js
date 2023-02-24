@@ -21,7 +21,6 @@ function copyFiles(that) {
         if (entitiesForStore.length == 0) return null
 
         const controllersDir = 'front/'
-        console.log(entitiesForStore)
         that.fs.copyTpl(
             that.templatePath("_store.ts_"),
             that.destinationPath(`${controllersDir}store/${firstLetterToLowerCase(storeName)}.ts`),

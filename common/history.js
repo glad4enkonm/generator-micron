@@ -17,7 +17,7 @@ const appendHistoryEntities = (that) => {
         ],
         "init": [],
         "relations": [
-            {"prop": "", "table": entity.name},
+            {"prop": "EntityId", "table": entity.name},
             {"prop": "ChangedBy", "table": "User"}
         ]
     }))
