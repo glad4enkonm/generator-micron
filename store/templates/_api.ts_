@@ -20,7 +20,7 @@ class <%- name %>ApiService {
   // Операции для <%- entity.name %> -------------------------------
 <%   if (entity.controller.operations.includes("R")) { -%>
   // Запросить данные
-  get<%- entity.name %>(id: number) {
+  get<%- entity.name %>(id: bigint) {
       return api.get<I<%- entity.name %>>(this.baseUrl + '/<%- entity.camelName %>' + '/' + id)
   }
 
@@ -45,7 +45,7 @@ class <%- name %>ApiService {
 <%   } -%>
 <%   if (entity.controller.operations.includes("D")) { -%>
   // Удалить данные
-  delete<%- entity.name %>(id: number) {
+  delete<%- entity.name %>(id: bigint) {
       return api.delete(this.baseUrl + '/<%- entity.camelName %>' + '/' + id)
   }
 

@@ -3,14 +3,20 @@ import { defineStore } from "pinia";
 import type { I<%- entity.name %> } from "@/model/<%- entity.camelName %>";
 <% }) -%>
 import <%- nameCamelCase %>Service from "@/api/<%- nameCamelCase %>"
-import { useErrorStore } from "@/stores/error";
-import { propIntersectionShallowObjectDiff } from "@/util/diff";
+import type { IEntityDictionary } from "@/util/dictionary";
+import {
+  createElementBase,
+  deleteElementBase,
+  loadElementBase,
+  loadElementListBase,
+  updateElementBase
+} from "@/util/store";
 
-export const useSettingsStore = defineStore({
+export const <%- nameCamelCase %>Store = defineStore({
   id: "<%- nameCamelCase %>",
   state: () => ({
 <% entities.forEach(function(entity){ -%>
-    <%- entity.camelName %>: {} as I<%- entity.name %>,
+    <%- entity.camelName %>Dictionary: {} as IEntityDictionary<I<%- entity.name %>>,
 <% }) -%>
   }),
   actions: {
@@ -19,42 +25,38 @@ export const useSettingsStore = defineStore({
 <%   if (entity.controller.operations.includes("R")) { -%>
     // Запросить данные
     async load<%- entity.name %>List() {
-        const result = await <%- nameCamelCase %>Service.get<%- entity.name %>List()
-        useErrorStore().setErrorMessageIfAny(result)
-        this.<%- entity.camelName %> = result.data
+      await loadElementListBase(() => <%- nameCamelCase %>Service.get<%- entity.name %>List(),
+        entity => entity.<%- entity.name %>Id,
+        newDictionary => this.<%- entity.camelName %>Dictionary = newDictionary)
     },
 
-    async load<%- entity.name %>(id: number) {
-        const result = await <%- nameCamelCase %>Service.get<%- entity.name %>(id)
-        useErrorStore().setErrorMessageIfAny(result)
-        return this.<%- entity.camelName %> = result.data
+    async load<%- entity.name %>(id: bigint) {
+      return await loadElementBase(id, id =>  <%- nameCamelCase %>Service.get<%- entity.name %>(id),
+        entity => entity.<%- entity.name %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("C")) { -%>
     // Создать данные
     async create<%- entity.name %>(payload:  I<%- entity.name %>) {
-        const result = await <%- nameCamelCase %>Service.create<%- entity.name %>(id)
-        useErrorStore().setErrorMessageIfAny(result)
-        return this.<%- entity.camelName %> = result.data
+      return await createElementBase(payload, p =>  <%- nameCamelCase %>Service.create<%- entity.name %>(p),
+        entity => entity.<%- entity.name %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("U")) { -%>
     // Обновить данные
-    async create<%- entity.name %>(updatedEntity:  I<%- entity.name %>) {
-        const entityDiff = propIntersectionShallowObjectDiff(this.<%- entity.camelName %>, updatedEntity)
-        const updateResponse = await <%- nameCamelCase %>Service.update(entityDiff)
-        if (updateResponse == null) return
-        useErrorStore().setErrorMessageIfAny(updateResponse)
-        if (updateResponse.status == 200) {
-            this.<%- nameCamelCase %> = updateResponse.data
-        }
+    async update<%- entity.name %>(updatedEntity:  I<%- entity.name %>) {
+      return await updateElementBase(updatedEntity, diff => <%- nameCamelCase %>Service.update<%- entity.name %>(diff),
+        entity => entity.<%- entity.name %>Id, id => this.<%- entity.camelName %>Dictionary[id],
+        (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("D")) { -%>
     // Удалить данные
-    async delete<%- entity.name %>(id: number) {
-        const result = await <%- nameCamelCase %>Service.delete<%- entity.name %>(id)
-        useErrorStore().setErrorMessageIfAny(result)
+    async delete<%- entity.name %>(id: bigint) {
+      return await deleteElementBase<I<%- entity.name %>>(id,
+        id => <%- nameCamelCase %>Service.delete<%- entity.name %>(id),
+        entity => entity.<%- entity.name %>Id, id => this.<%- entity.camelName %>Dictionary,
+        id => delete this.<%- entity.camelName %>Dictionary[id])
     },
 <%   } -%>
 <% }) -%>
