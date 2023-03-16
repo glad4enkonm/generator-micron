@@ -1,5 +1,5 @@
 export interface I<%- entity.name %> {
 <% entity.modelFrontProps.forEach(function(prop){ -%>
-    <%= prop.name %>?: <%= prop.type %>,
+    <%= prop.camelName %>?: <%= prop.type %>,
 <% }); -%>
 }

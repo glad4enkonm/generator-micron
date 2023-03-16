@@ -3,7 +3,7 @@ using Dapper.Contrib.Extensions;
 
 namespace database.Models;
 
-[Table("<%- name %>")]
+[Table("`<%- name %>`")]
 public class <%- name %>: IEntity
 {
 <% modelProps.forEach(function(prop){ -%>
@@ -21,7 +21,7 @@ public class <%- name %>: IEntity
 
 namespace database.Models.History;
 
-[Table("<%- name %>")]
+[Table("`<%- name %>`")]
 public class <%- name %>: IEntity
 {
 <% modelProps.forEach(function(prop){ -%>
@@ -40,7 +40,7 @@ using database.Models.History.Base;
 
 namespace database.Models.History;
 
-[Table("<%- name %>")]
+[Table("`<%- name %>`")]
 public class <%- name %>: HistoryBase
 {
     [Key]

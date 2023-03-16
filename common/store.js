@@ -26,6 +26,7 @@ function prepare_store_model_api_data(entity) {
     for (let [index, prop] of entityCopy.props.entries()) {
         let newProp = {...prop}
         newProp["type"] = mapType(prop.type)
+        newProp["camelName"] = firstLetterToLowerCase(prop.name)
         entityCopy.modelFrontProps.push(newProp)
     }
     console.log("prepare_store_model_api_data done")

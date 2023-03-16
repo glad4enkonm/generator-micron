@@ -5,6 +5,7 @@ const {appendHistoryEntities} = require("../common/history");
 
 function copyFiles(that) {
     appendHistoryEntities(that)
+    const programDir = that.options.calledFromApp ? 'database/' : ''
     that.answers.entities.map(entity => {
         if (entity.hasOwnProperty("generation") && entity.generation.repository == false)
             return // пропускаем если у элемента есть указание не создавать репозиторий
@@ -30,6 +31,11 @@ function copyFiles(that) {
             dataToRender
         )
     })
+    that.fs.copyTpl(
+        that.templatePath("_Program.cs"),
+        that.destinationPath(`${programDir}Program.cs`),
+        { entities : that.answers.entities }
+    )
 
 }
 

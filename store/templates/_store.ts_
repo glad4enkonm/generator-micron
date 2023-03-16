@@ -17,6 +17,7 @@ export const <%- nameCamelCase %>Store = defineStore({
   state: () => ({
 <% entities.forEach(function(entity){ -%>
     <%- entity.camelName %>Dictionary: {} as IEntityDictionary<I<%- entity.name %>>,
+    <%- entity.camelName %>List: [] as I<%- entity.name %>[],
 <% }) -%>
   }),
   actions: {
@@ -26,28 +27,31 @@ export const <%- nameCamelCase %>Store = defineStore({
     // Запросить данные
     async load<%- entity.name %>List() {
       await loadElementListBase(() => <%- nameCamelCase %>Service.get<%- entity.name %>List(),
-        entity => entity.<%- entity.name %>Id,
-        newDictionary => this.<%- entity.camelName %>Dictionary = newDictionary)
+        entity => entity.<%- entity.camelName %>Id,
+        (newDictionary, originalList) => {
+          this.<%- entity.camelName %>Dictionary = newDictionary
+          this.<%- entity.camelName %>List = originalList
+        })
     },
 
     async load<%- entity.name %>(id: bigint) {
       return await loadElementBase(id, id =>  <%- nameCamelCase %>Service.get<%- entity.name %>(id),
-        entity => entity.<%- entity.name %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
+        entity => entity.<%- entity.camelName %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("C")) { -%>
     // Создать данные
     async create<%- entity.name %>(payload:  I<%- entity.name %>) {
       return await createElementBase(payload, p =>  <%- nameCamelCase %>Service.create<%- entity.name %>(p),
-        entity => entity.<%- entity.name %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
+        entity => entity.<%- entity.camelName %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("U")) { -%>
     // Обновить данные
     async update<%- entity.name %>(updatedEntity:  I<%- entity.name %>) {
       return await updateElementBase(updatedEntity, diff => <%- nameCamelCase %>Service.update<%- entity.name %>(diff),
-        entity => entity.<%- entity.name %>Id, id => this.<%- entity.camelName %>Dictionary[id],
-        (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
+        entity => entity.<%- entity.camelName %>Id, id => this.<%- entity.camelName %>Dictionary[id],
+        (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity, "<%- entity.camelName %>Id")
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("D")) { -%>
@@ -55,7 +59,7 @@ export const <%- nameCamelCase %>Store = defineStore({
     async delete<%- entity.name %>(id: bigint) {
       return await deleteElementBase<I<%- entity.name %>>(id,
         id => <%- nameCamelCase %>Service.delete<%- entity.name %>(id),
-        entity => entity.<%- entity.name %>Id, id => this.<%- entity.camelName %>Dictionary,
+        entity => entity.<%- entity.camelName %>Id, id => this.<%- entity.camelName %>Dictionary[id],
         id => delete this.<%- entity.camelName %>Dictionary[id])
     },
 <%   } -%>
