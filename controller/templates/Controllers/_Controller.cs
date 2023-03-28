@@ -93,7 +93,7 @@ public class <%- entities[0].generation.controller %>Controller: ControllerBase
 
 <%    } -%>
 <%    if (entity.controller.operations.includes("D") && entity.generation.isHistoryEnabled) { -%>
-    [HttpDelete("<%= entity.name %>")]
+    [HttpDelete("<%= entity.name %>/{id}")]
     public bool Delete<%= entity.name %>(ulong id)
     {
         var userId = (ulong)(HttpContext.Items["UserId"] ?? throw new InvalidOperationException());

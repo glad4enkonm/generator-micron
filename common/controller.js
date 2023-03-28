@@ -15,6 +15,7 @@ const mapping = {
     "datetime": "DateTime",
     "varchar": "string",
     "decimal": "decimal",
+    "bool": "bool",
 }
 
 function prepare_controller_data(entity) {

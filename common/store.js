@@ -15,6 +15,7 @@ const mapping = {
     "datetime": "Date",
     "varchar": "string",
     "decimal": "number",
+    "bool": "boolean"
 }
 
 function prepare_store_model_api_data(entity) {

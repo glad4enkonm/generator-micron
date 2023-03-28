@@ -4,7 +4,8 @@ const {casePascal} = require("./naming");
 const id = {
     type: "bigint unsigned",
     options: "auto_increment NOT NULL PRIMARY KEY,",
-}
+}, isDeleted = { name: "IsDeleted", type: "bool", unique: false, default: "0", null: false }
+
 
 initTemplate = "INSERT INTO [Table] ([Props]) VALUES([Values]);"
 
@@ -42,6 +43,12 @@ function prepare_sql_data(entity) {
 
     // Преобразуем названия всех свойств
     entityCopy.props.unshift({"name":entityCopy.name + 'Id', "id": true, "type": id.type, "options" : id.options})
+
+    if (entity.generation.isHistoryEnabled == true) { // добавляем мягкое удаление для сущностей с историей
+        entityCopy.props.push(isDeleted)
+    }
+
+    prepare_init_sql(entityCopy)
 
     // Обрабатываем отношения
     prepare_relation_sql(entityCopy)
