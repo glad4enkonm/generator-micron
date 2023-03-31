@@ -18,19 +18,24 @@ public class <%- name %>: IEntity
     }
 }
 <%    } else if (generation.isHistoryEnabled == true) { -%>
+using database.Models.History.Base;
 
 namespace database.Models.History;
 
 [Table("`<%- name %>`")]
-public class <%- name %>: IEntity
+public class <%- name %>: EntityWithHistoryBase
 {
 <% modelProps.forEach(function(prop){ -%>
 <%    if (prop.name === name + "Id") { -%>
     [Key]
 <%    } -%>
+<%    if (prop.name === "IsDeleted") { -%>
+    public override bool IsDeleted { get; set; }
+<%    } else { -%>
     public <%= prop.type %> <%= prop.name %> { get; set; }
+<%    } -%>
 <% }); -%>
-    public ulong GetId ()
+    public override ulong GetId ()
     {
         return <%- name %>Id;
     }
