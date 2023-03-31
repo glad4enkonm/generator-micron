@@ -48,8 +48,6 @@ function prepare_sql_data(entity) {
         entityCopy.props.push(isDeleted)
     }
 
-    prepare_init_sql(entityCopy)
-
     // Обрабатываем отношения
     prepare_relation_sql(entityCopy)
 
