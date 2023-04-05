@@ -49,7 +49,7 @@ public class <%- entities[0].generation.controller %>Controller: ControllerBase
 
 <%    } -%>
 <%    if (entity.controller.operations.includes("R")) { -%>
-    [HttpGet("<%= entity.name %>")]
+    [HttpGet("<%= entity.name %>/{id}")]
     public <%= entity.name %>? Get<%= entity.name %>(ulong id)
     {
         return _repository<%- entity.name %>.Get(id);
