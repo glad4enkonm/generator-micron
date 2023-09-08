@@ -35,32 +35,52 @@ export const <%- nameCamelCase %>Store = defineStore({
     },
 
     async load<%- entity.name %>(id: bigint) {
+      const that = this
       return await loadElementBase(id, id =>  <%- nameCamelCase %>Service.get<%- entity.name %>(id),
-        entity => entity.<%- entity.camelName %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
+        entity => entity.<%- entity.camelName %>Id,
+        function(id, entity) {
+            that.<%- entity.camelName %>Dictionary[id] = entity
+            that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.filter(e =>
+                e.<%- entity.camelName %>Id?.toString() != id)
+        })
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("C")) { -%>
     // Создать данные
     async create<%- entity.name %>(payload:  I<%- entity.name %>) {
+      const that = this
       return await createElementBase(payload, p =>  <%- nameCamelCase %>Service.create<%- entity.name %>(p),
-        entity => entity.<%- entity.camelName %>Id, (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity)
+        entity => entity.<%- entity.camelName %>Id,
+        function(id, entity) {
+            that.<%- entity.camelName %>Dictionary[id] = entity)
+            that.<%- entity.camelName %>List.push(entity)
+        }
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("U")) { -%>
     // Обновить данные
     async update<%- entity.name %>(updatedEntity:  I<%- entity.name %>) {
+      const that = this
       return await updateElementBase(updatedEntity, diff => <%- nameCamelCase %>Service.update<%- entity.name %>(diff),
         entity => entity.<%- entity.camelName %>Id, id => this.<%- entity.camelName %>Dictionary[id],
-        (id, entity) => this.<%- entity.camelName %>Dictionary[id] = entity, "<%- entity.camelName %>Id")
+        function(id, entity) {
+            that.<%- entity.camelName %>Dictionary[id] = entity
+            that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.map(e => e.<%- entity.camelName %>Id?.toString() == id ? entity : e)
+        },
+        "<%- entity.camelName %>Id")
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("D")) { -%>
     // Удалить данные
     async delete<%- entity.name %>(id: bigint) {
+      const that = this
       return await deleteElementBase<I<%- entity.name %>>(id,
         id => <%- nameCamelCase %>Service.delete<%- entity.name %>(id),
-        entity => entity.<%- entity.camelName %>Id, id => this.<%- entity.camelName %>Dictionary[id],
-        id => delete this.<%- entity.camelName %>Dictionary[id])
+        id => this.<%- entity.camelName %>Dictionary[id],
+        function(id) {
+            delete that.<%- entity.camelName %>Dictionary[id]
+            that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.filter(e => e.<%- entity.camelName %>Id?.toString() != id)
+        }
     },
 <%   } -%>
 <% }) -%>

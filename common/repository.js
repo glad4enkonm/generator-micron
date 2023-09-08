@@ -14,7 +14,10 @@ const mapping = {
     "datetime": "DateTime",
     "varchar": "string",
     "decimal": "decimal",
-    "bool": "bool"
+    "bool": "bool",
+    "tinytext": "string",
+    "text": "string",
+    "longtext": "string"
 }
 
 function prepare_model_and_repository_data(entity) {

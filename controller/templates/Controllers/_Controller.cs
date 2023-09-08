@@ -34,7 +34,7 @@ public class <%- entities[0].generation.controller %>Controller: ControllerBase
 #region <%= entity.name %> <%= entity.controller.operations %>
 <%    if (entity.controller.operations.includes("C") && entity.generation.isHistoryEnabled) { -%>
     [HttpPost("<%= entity.name %>")]
-    public ulong Create<%= entity.name %>(<%= entity.name %> entity)
+    public <%= entity.name %> Create<%= entity.name %>(<%= entity.name %> entity)
     {
         var userId = (ulong)(HttpContext.Items["UserId"] ?? throw new InvalidOperationException());
         return _repository<%- entity.name %>.Insert(entity, userId);
@@ -42,7 +42,7 @@ public class <%- entities[0].generation.controller %>Controller: ControllerBase
 
 <%    } else if (entity.controller.operations.includes("C")) {-%>
     [HttpPost("<%= entity.name %>")]
-    public ulong Create<%= entity.name %>(<%= entity.name %> entity)
+    public <%= entity.name %> Create<%= entity.name %>(<%= entity.name %> entity)
     {
         return _repository<%- entity.name %>.Insert(entity);
     }

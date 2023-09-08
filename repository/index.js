@@ -10,9 +10,6 @@ function copyFiles(that) {
         if (entity.hasOwnProperty("generation") && entity.generation.repository == false)
             return // пропускаем если у элемента есть указание не создавать репозиторий
 
-        if (entity.name.endsWith("History"))
-            return // используем новые базовые классы, не нужно создавать отдельные репозитории
-
         const dataToRender = repository.prepareData(sql.prepareData(entity))
 
         let modelsDir = that.options.calledFromApp ? 'database/Models/' : 'Models/'
@@ -27,6 +24,9 @@ function copyFiles(that) {
             that.destinationPath(`${modelsDir}${dataToRender.name}.cs`),
             dataToRender
         )
+
+        if (entity.name.endsWith("History"))
+            return // используем новые базовые классы, не нужно создавать отдельные репозитории
 
         that.fs.copyTpl(
             that.templatePath("Repository/_Repository.cs"),

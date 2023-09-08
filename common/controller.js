@@ -16,6 +16,9 @@ const mapping = {
     "varchar": "string",
     "decimal": "decimal",
     "bool": "bool",
+    "tinytext": "string",
+    "text": "string",
+    "longtext": "string"
 }
 
 function prepare_controller_data(entity) {

@@ -15,7 +15,10 @@ const mapping = {
     "datetime": "Date",
     "varchar": "string",
     "decimal": "number",
-    "bool": "boolean"
+    "bool": "boolean",
+    "tinytext": "string",
+    "text": "string",
+    "longtext": "string"
 }
 
 function prepare_store_model_api_data(entity) {

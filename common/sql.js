@@ -30,7 +30,9 @@ function prepare_relation_sql(entity){
         relation.table = casePascal(relation.table)
         const defaultPropName = casePascal(relation.table) + 'Id'
         const propName = relation.prop.length > 0 ? relation.prop : defaultPropName
-        entity.props.push({"name": propName, "type": id.type})
+        entity.props.push({"name": propName, "type": id.type, 
+            "null": Object.prototype.hasOwnProperty.call(relation, "null") && relation.null,
+            "default": Object.prototype.hasOwnProperty.call(relation, "default") ? relation.default : ""})
         entity.constraints.push({"name": `FK_${entity.name}_${propName}_${defaultPropName}`,
             "prop": propName,  "foreignProp": defaultPropName, "table": relation.table })
     }
