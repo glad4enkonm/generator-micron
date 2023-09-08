@@ -101,7 +101,7 @@ public class <%- entities[0].generation.controller %>Controller: ControllerBase
         return _repository<%- entity.name %>.Delete(entity, userId);
     }
 <%    } else if (entity.controller.operations.includes("D")) {-%>
-    [HttpDelete("<%= entity.name %>")]
+    [HttpDelete("<%= entity.name %>/{id}")]
     public bool Delete<%= entity.name %>(ulong id)
     {
         var entity = _repository<%- entity.name %>.Get(id) ?? throw new InvalidOperationException();
