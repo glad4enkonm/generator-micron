@@ -52,9 +52,9 @@ export const <%- nameCamelCase %>Store = defineStore({
       return await createElementBase(payload, p =>  <%- nameCamelCase %>Service.create<%- entity.name %>(p),
         entity => entity.<%- entity.camelName %>Id,
         function(id, entity) {
-            that.<%- entity.camelName %>Dictionary[id] = entity)
+            that.<%- entity.camelName %>Dictionary[id] = entity
             that.<%- entity.camelName %>List.push(entity)
-        }
+        })
     },
 <%   } -%>
 <%   if (entity.controller.operations.includes("U")) { -%>
@@ -80,7 +80,7 @@ export const <%- nameCamelCase %>Store = defineStore({
         function(id) {
             delete that.<%- entity.camelName %>Dictionary[id]
             that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.filter(e => e.<%- entity.camelName %>Id?.toString() != id)
-        }
+        })
     },
 <%   } -%>
 <% }) -%>

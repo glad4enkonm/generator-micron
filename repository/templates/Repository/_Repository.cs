@@ -28,7 +28,7 @@ using database.Models.History;
 
 namespace database.Repository.History;
 
-public interface I<%- name %>Repository : IDataRepositoryWithHistory<<%- name %>>
+public interface I<%- name %>Repository : IDataRepositoryWithHistory<<%- name %>, <%- name %>History>
 {
 }
 
