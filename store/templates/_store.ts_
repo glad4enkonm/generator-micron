@@ -40,7 +40,8 @@ export const <%- nameCamelCase %>Store = defineStore({
         entity => entity.<%- entity.camelName %>Id,
         function(id, entity) {
             that.<%- entity.camelName %>Dictionary[id] = entity
-            that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.map(e => e.<%- entity.camelName %>Id?.toString() == id ? entity : e)
+            that.<%- entity.camelName %>List = that.<%- entity.camelName %>List.filter(e => e.<%- entity.camelName %>Id?.toString() != id)
+            that.<%- entity.camelName %>List.push(entity)
         })
     },
 <%   } -%>
