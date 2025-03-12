@@ -12,8 +12,7 @@ import {
   updateElementBase
 } from "@/util/store";
 
-export const <%- nameCamelCase %>Store = defineStore({
-  id: "<%- nameCamelCase %>",
+export const <%- nameCamelCase %>Store = defineStore("<%- nameCamelCase %>", {  
   state: () => ({
 <% entities.forEach(function(entity){ -%>
     <%- entity.camelName %>Dictionary: {} as IEntityDictionary<I<%- entity.name %>>,
