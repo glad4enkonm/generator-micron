@@ -27,7 +27,9 @@ function prepare_model_and_repository_data(entity) {
     // Проходим по всем свойствам из SQL и отображаем типы
     for (let [index, prop] of entityCopy.props.entries()) {
         let newProp = {...prop}
-        newProp["type"] = mapType(prop.type)
+        newProp["type"] = mapType(prop.type)        
+        if ((newProp["type"] != "string") && (prop.null)) // строки уже могут содержать null для остальных типов
+            newProp["type"] += "?" // если разрешен null, дописываем ? к типу (DateTime?)        
         entityCopy.modelProps.push(newProp)
     }
     console.log("prepare_model_and_repository_data done")
